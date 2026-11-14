@@ -195,7 +195,7 @@ function NameField({ store, placeholder = '模板名字，例如：粉色便利�
 }
 
 /** 素材小窗的内容：缩图格子，最后一格上传（可以一次选好几张）。 */
-function AssetPicker({ pick, menu }: { pick: (item: CssAssetInfo) => void; menu: (item: CssAssetInfo) => void }) {
+export function AssetPicker({ pick, menu }: { pick: (item: CssAssetInfo) => void; menu: (item: CssAssetInfo) => void }) {
   const [items, setItems] = useState(listCssAssets), [busy, setBusy] = useState(false);
   const input = useRef<HTMLInputElement>(null), press = useRef(0), pressed = useRef(false);
   useEffect(() => { const sync = () => setItems(listCssAssets()); void loadCssAssets().then(sync); window.addEventListener(CSS_ASSETS_EVENT, sync); return () => window.removeEventListener(CSS_ASSETS_EVENT, sync); }, []);

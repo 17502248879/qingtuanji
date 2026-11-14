@@ -1,0 +1,69 @@
+/* ---------------- 自己写 HTML、CSS 做的组件 ---------------- */
+/* 最外面那层：整格大小；里面的东西都是自己写的（CSS 只套在这一层里面）。isolation 让里面的 z-index 跑不出这一格 */
+#main-content .home-slot.is-custom { isolation: isolate; }
+#main-content .home-cw { position: absolute; inset: 0; overflow: hidden; box-sizing: border-box; color: var(--win-ink); font-size: 12px; line-height: 1.4; text-align: left; }
+#main-content .home-cw-body { display: contents; }
+#main-content .home-cw *, #main-content .home-cw *::before, #main-content .home-cw *::after { box-sizing: border-box; }
+#main-content .home-cw img { max-width: none; }
+#main-content .home-cw [data-cw-photo] { cursor: pointer; }
+/* {{图片}} 还没选照片：斜纹底 */
+#main-content .home-cw .is-empty-photo { background-color: var(--win-face); background-image: repeating-linear-gradient(45deg, color-mix(in srgb, var(--theme-color) 35%, var(--color-surface)) 0 6px, var(--color-surface) 6px 12px); }
+
+/* ===== 编辑窗：从上面到底下那排上面 ===== */
+#main-content .home-cw-editor {
+  position: absolute; left: 10px; right: 10px; top: 44px; bottom: 104px; z-index: 60; display: flex; flex-direction: column;
+  border: 1px solid var(--color-muted); background: var(--color-surface); box-shadow: var(--effect-raised), 0 -3px 12px rgba(0, 0, 0, 0.14);
+  color: var(--color-text); font-size: 12px; text-align: left;
+}
+#main-content .home-cw-editor > .home-edit-sheet-head { margin: 0; padding: 8px 10px; border-bottom: 1px dotted var(--color-muted); }
+#main-content .home-cw-editor-body { flex: 1; min-height: 0; overflow-y: auto; display: flex; flex-direction: column; gap: 0; padding: 8px 10px; }
+#main-content .home-cw-editor-body > .home-widget-field:first-of-type { margin-top: 8px; }
+#main-content .home-cw-preview {
+  position: relative; flex: none; height: 132px; overflow: hidden; border: 1px solid var(--color-muted); box-shadow: var(--effect-sunken);
+  background-color: var(--win-face);
+  background-image: linear-gradient(color-mix(in srgb, var(--color-muted) 22%, transparent) 1px, transparent 1px), linear-gradient(90deg, color-mix(in srgb, var(--color-muted) 22%, transparent) 1px, transparent 1px);
+  background-size: 20.625px 22px;
+}
+#main-content .home-cw-preview-tag { position: absolute; left: 5px; top: 3px; z-index: 2; color: var(--color-muted); font-size: 9px; pointer-events: none; }
+#main-content .home-cw-stage { position: absolute; left: 50%; top: 50%; transform-origin: center; outline: 1px dashed color-mix(in srgb, var(--color-muted) 60%, transparent); }
+#main-content .home-cw-seg { display: flex; gap: 3px; }
+#main-content .home-cw-seg button {
+  min-width: 26px; height: 24px; padding: 0; border: 1px solid var(--color-muted); border-radius: 2px; background: var(--effect-face-white); box-shadow: var(--effect-button-shadow);
+  color: var(--color-text); font: inherit; font-size: 12px; cursor: pointer; outline: none;
+}
+#main-content .home-cw-seg button.is-on { background: var(--win-bar); box-shadow: var(--effect-sunken); }
+#main-content .home-cw-times { color: var(--color-muted); font-style: normal; }
+#main-content .home-cw-photo { flex: none; width: 26px; height: 26px; box-sizing: border-box; border: 1px solid var(--color-muted); background: var(--win-face) center / cover no-repeat; box-shadow: var(--effect-sunken); }
+#main-content .home-cw-photo.is-empty { background-image: repeating-linear-gradient(45deg, color-mix(in srgb, var(--theme-color) 35%, var(--color-surface)) 0 4px, var(--color-surface) 4px 8px); }
+#main-content .home-cw-chips { display: flex; flex-wrap: wrap; align-items: center; gap: 4px; margin-top: 8px; }
+#main-content .home-cw-chips > span { flex: 0 0 64px; color: var(--color-text); font-size: 12px; }
+#main-content .home-cw-chips button {
+  padding: 2px 8px; border: 1px solid var(--color-muted); border-radius: 10px; background: var(--effect-face-white); box-shadow: var(--effect-button-shadow);
+  color: var(--color-text); font: inherit; font-size: 11px; cursor: pointer; outline: none;
+}
+#main-content .home-cw-chips button:active, #main-content .home-cw-seg button:active { box-shadow: var(--effect-sunken); }
+#main-content .home-cw-tabs { display: flex; align-items: flex-end; margin-top: 10px; }
+#main-content .home-cw-tabs > button[role="tab"] {
+  padding: 4px 14px; border: 1px solid var(--color-muted); border-bottom: 0; background: var(--win-face); color: var(--color-muted); font: inherit; font-size: 12px; cursor: pointer; outline: none;
+}
+#main-content .home-cw-tabs > button[role="tab"] + button[role="tab"] { margin-left: -1px; }
+#main-content .home-cw-tabs > button.is-on { position: relative; z-index: 1; background: var(--color-surface); color: var(--color-text); margin-bottom: -1px; padding-bottom: 5px; }
+#main-content .home-cw-tabs-gap { flex: 1; }
+#main-content .home-cw-tabs .home-cw-assets { margin-bottom: 4px; padding: 2px 10px; font-size: 11px; }
+#main-content .home-cw-code {
+  flex: none; display: block; width: 100%; height: 190px; box-sizing: border-box; margin: 0; padding: 6px 8px; resize: vertical;
+  border: 1px solid var(--color-muted); border-radius: 0; background: var(--color-surface); box-shadow: var(--effect-sunken);
+  color: var(--color-text); font: 11.5px/1.55 'SF Mono', Menlo, Consolas, monospace; white-space: pre; overflow: auto; outline: none; tab-size: 2;
+}
+#main-content .home-cw-code:focus { border-color: var(--color-accent-strong); }
+#main-content .home-cw-error { margin: 6px 0 0; color: var(--color-danger, #c55); font-size: 11px; }
+#main-content .home-cw-editor-foot { display: flex; justify-content: space-between; align-items: center; padding: 8px 10px; border-top: 1px dotted var(--color-muted); }
+#main-content .home-cw-editor-actions { display: flex; gap: 6px; }
+#main-content .home-cw-editor .home-edit-btn:disabled { opacity: 0.55; cursor: default; }
+
+/* 加组件：自己做一个、导入组件 */
+#main-content .home-edit-card.is-new { border-style: dashed; box-shadow: none; }
+#main-content .home-edit-card.is-new .home-edit-thumb { display: grid; place-items: center; border: 0; background: none; color: var(--color-muted); font-size: 18px; font-style: normal; }
+#main-content .home-edit-thumb.is-custom { background: repeating-linear-gradient(-45deg, color-mix(in srgb, var(--color-accent) 45%, var(--color-surface)) 0 6px, var(--color-surface) 6px 12px); }
+/* 编辑窗、设定开着的时候，后面组件的「－」不要露出来 */
+#main-content:has(.home-cw-editor, .home-widget-sheet) .home-slot-remove { visibility: hidden; }

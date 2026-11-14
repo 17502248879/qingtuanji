@@ -122,6 +122,8 @@ export const assetRef = (name: string) => `url(asset:${name})`;
 /** CSS 里用到哪些素材。 */
 export function usedAssets(css: string) { return [...new Set([...String(css || '').matchAll(REF)].map(match => match[2]))]; }
 /** 套到画面上之前：url(asset:名字) 换成图片本身。 */
+/** 一张素材现在的网址（HTML 的 src="asset:名字" 用）；找不到给透明小图。 */
+export const assetUrl = (name: string) => loaded.get(name)?.url || BLANK;
 export function resolveAssets(css: string) { return css.replace(REF, (_, __, name: string) => `url("${loaded.get(name)?.url || BLANK}")`); }
 /** 改名以后，CSS 里的写法跟着改。 */
 export function renameInCss(css: string, from: string, to: string) { return css.replace(REF, (whole, quote: string, name: string) => name === from ? `url(${quote}asset:${to}${quote})` : whole); }

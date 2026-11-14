@@ -1,4 +1,5 @@
 import { kv } from './kvStorage';
+import { syncCustomItems } from './customWidgets';
 import { DEFAULT_LAYOUT, normalize } from './homeLayout';
 import type { HomeLayout } from './homeLayout';
 
@@ -6,7 +7,7 @@ import type { HomeLayout } from './homeLayout';
 export const HOME_LAYOUT_KEY = 'qingtuan_home_layout_v1';
 const KEY = HOME_LAYOUT_KEY;
 export const HOME_LAYOUT_EVENT = 'qingtuan:home-layout';
-export function readLayout(): HomeLayout { try { const text = kv.getItem(KEY); return text ? normalize(JSON.parse(text)) : DEFAULT_LAYOUT; } catch { return DEFAULT_LAYOUT; } }
+export function readLayout(): HomeLayout { syncCustomItems(); try { const text = kv.getItem(KEY); return text ? normalize(JSON.parse(text)) : DEFAULT_LAYOUT; } catch { return DEFAULT_LAYOUT; } }
 export function writeLayout(layout: HomeLayout) {
   try { kv.setItem(KEY, JSON.stringify(layout)); } catch { /* 存不了就只在这次有效 */ }
   window.dispatchEvent(new CustomEvent(HOME_LAYOUT_EVENT));

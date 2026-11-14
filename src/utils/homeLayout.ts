@@ -8,7 +8,9 @@ export const COLS = 4, ROWS = 7, MAX_PAGES = 3;
 /** 格子的大小（px）：一栏 82.5（四栏 330，跟原本图标区一样宽），一列 88；第一列上面留 22。 */
 export const CELL_W = 82.5, CELL_H = 88, PAD_TOP = 22, GRID_W = COLS * CELL_W;
 
-export type HomeItemId = 'main' | 'tama' | 'notice' | 'ledger' | 'memos' | 'world' | 'memories' | 'preset' | 'hello' | 'login' | 'calendar';
+export type BuiltinItemId = 'main' | 'tama' | 'notice' | 'ledger' | 'memos' | 'world' | 'memories' | 'preset' | 'hello' | 'login' | 'calendar';
+/** 自己写 HTML、CSS 做的组件：cw_ 开头 */
+export type HomeItemId = BuiltinItemId | `cw_${string}`;
 /** extra：后来加的组件，存的排法里没提到它就当作收起来（不会自己跑出来）。 */
 export interface HomeItemInfo { id: HomeItemId; name: string; w: number; h: number; widget: boolean; extra?: boolean }
 export const HOME_ITEMS: HomeItemInfo[] = [
@@ -24,7 +26,14 @@ export const HOME_ITEMS: HomeItemInfo[] = [
   { id: 'memories', name: 'Memories', w: 1, h: 1, widget: false },
   { id: 'preset', name: 'Preset', w: 1, h: 1, widget: false }
 ];
-export const itemInfo = (id: HomeItemId) => HOME_ITEMS.find(item => item.id === id)!;
+/** 自己做的组件（名字、大小由 customWidgets 设进来）。 */
+let customItems: HomeItemInfo[] = [];
+export function setCustomItems(list: { id: HomeItemId; name: string; w: number; h: number }[]) {
+  customItems = list.map(item => ({ id: item.id, name: item.name, w: Math.max(1, Math.min(COLS, item.w)), h: Math.max(1, Math.min(4, item.h)), widget: true, extra: true }));
+}
+/** 全部的东西：原本的 + 自己做的。 */
+export const allItems = () => [...HOME_ITEMS, ...customItems];
+export const itemInfo = (id: HomeItemId) => allItems().find(item => item.id === id)!;
 
 export interface Placement { id: HomeItemId; page: number; col: number; row: number }
 export interface HomeLayout { pages: number; items: Placement[]; hidden: HomeItemId[] }
@@ -67,7 +76,7 @@ export function normalize(raw: unknown): HomeLayout {
     const data = raw as Partial<HomeLayout>;
     if (!data || !Array.isArray(data.items)) return DEFAULT_LAYOUT;
     let layout: HomeLayout = { pages: Math.min(MAX_PAGES, Math.max(1, Math.round(Number(data.pages)) || 1)), items: [], hidden: [] };
-    const ids = new Set(HOME_ITEMS.map(item => item.id));
+    const ids = new Set(allItems().map(item => item.id));
     layout.hidden = [...new Set((Array.isArray(data.hidden) ? data.hidden : []).filter(id => ids.has(id) && itemInfo(id).widget))];
     const pending: HomeItemId[] = [];
     for (const item of data.items) {
@@ -76,7 +85,7 @@ export function normalize(raw: unknown): HomeLayout {
       if (spot.page >= 0 && spot.page < layout.pages && fits(spot) && !layout.items.some(other => overlaps(spot, other))) layout.items.push(spot);
       else pending.push(item.id);
     }
-    for (const info of HOME_ITEMS) {
+    for (const info of allItems()) {
       if (layout.hidden.includes(info.id) || layout.items.some(item => item.id === info.id) || pending.includes(info.id)) continue;
       if (info.extra) layout.hidden.push(info.id); else pending.push(info.id);
     }
