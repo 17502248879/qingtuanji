@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import type { CSSProperties, PointerEvent as ReactPointerEvent, ReactNode } from 'react';
-import { CELL_H, CELL_W, COLS, GRID_W, HOME_ITEMS, MAX_PAGES, PAD_TOP, ROWS, addItem, hideItem, itemInfo, moveItem } from '../../../utils/homeLayout';
+import { CELL_H, CELL_W, COLS, GRID_W, MAX_PAGES, allItems, PAD_TOP, ROWS, addItem, hideItem, itemInfo, moveItem } from '../../../utils/homeLayout';
 import type { HomeItemId, HomeLayout } from '../../../utils/homeLayout';
 import { showToast } from '../../../utils/toast';
 
@@ -19,10 +19,12 @@ const slotLeft = (page: number, col: number) => `calc(${page} * (100% + 40px) + 
  * 长按进编辑：拖着换位置（拖到画面边边翻页）、组件左上角「－」收起来、「＋ 加组件」加回来、「完成」离开。
  * 编辑中点一下能设定的组件（configurable）会叫 onConfigure；layer 是要一起放进编辑层的东西（设定框）。
  */
-export function HomeGrid({ layout, setLayout, page, go, blocks, editing, setEditing, inert, configurable = [], onConfigure, layer }: {
+export function HomeGrid({ layout, setLayout, page, go, blocks, editing, setEditing, inert, configurable = [], onConfigure, layer, onCreate, onImport }: {
   layout: HomeLayout; setLayout: (next: HomeLayout) => void; page: number; go: (page: number) => void;
-  blocks: Record<HomeItemId, ReactNode>; editing: boolean; setEditing: (editing: boolean) => void; inert?: boolean;
+  blocks: Partial<Record<HomeItemId, ReactNode>>; editing: boolean; setEditing: (editing: boolean) => void; inert?: boolean;
   configurable?: HomeItemId[]; onConfigure?: (id: HomeItemId | null) => void; layer?: ReactNode;
+  /** 加组件最后那两张：自己做一个、导入组件 */
+  onCreate?: () => void; onImport?: () => void;
 }) {
   const box = useRef<HTMLDivElement>(null), track = useRef<HTMLDivElement>(null), ruler = useRef<HTMLSpanElement>(null);
   const hold = useRef({ timer: 0, x: 0, y: 0, id: null as HomeItemId | null, rect: null as DOMRect | null, active: false, swallow: false });
@@ -127,7 +129,7 @@ export function HomeGrid({ layout, setLayout, page, go, blocks, editing, setEdit
     if (drag?.id === id) return { left: drag.left, top: drag.top, width, height };
     return { left: slotLeft(itemPage, col), top: PAD_TOP + row * CELL_H, width, height };
   }
-  const widgets = HOME_ITEMS.filter(item => item.widget);
+  const widgets = allItems().filter(item => item.widget);
 
   return <>
     <div ref={box} className={'home-pages' + (editing ? ' is-editing' : '') + (drag ? ' is-dragging' : '')} inert={inert || undefined}
@@ -148,7 +150,7 @@ export function HomeGrid({ layout, setLayout, page, go, blocks, editing, setEdit
         {drag && <div className={'home-drop' + (drag.ok ? '' : ' is-bad')} style={{ left: slotLeft(page, drag.col), top: PAD_TOP + drag.row * CELL_H, width: itemInfo(drag.id).w * CELL_W, height: itemInfo(drag.id).h * CELL_H }} />}
         {layout.items.map(item => {
           const info = itemInfo(item.id);
-          return <div key={item.id} data-item={item.id} className={`home-slot ${info.widget ? 'is-widget' : 'is-app'}${drag?.id === item.id ? ' is-held' : ''}`}
+          return <div key={item.id} data-item={item.id} className={`home-slot ${info.widget ? 'is-widget' : 'is-app'}${item.id.startsWith('cw_') ? ' is-custom' : ''}${drag?.id === item.id ? ' is-held' : ''}`}
             style={slotStyle(item.id, item.page, item.col, item.row)} inert={(!editing && item.page !== page) || undefined} aria-hidden={item.page !== page || undefined}>
             {blocks[item.id]}
             {editing && info.widget && <button type="button" className="home-slot-remove" data-item={item.id} aria-label={`收起${info.name}`}>−</button>}
@@ -171,11 +173,13 @@ export function HomeGrid({ layout, setLayout, page, go, blocks, editing, setEdit
           const placed = layout.items.find(item => item.id === info.id);
           return <button type="button" key={info.id} className={'home-edit-card' + (placed ? ' is-placed' : '')} disabled={!!placed}
             onClick={() => { const next = addItem(layout, info.id, page); if (!next) { showToast('放不下了，先挪出一点空位'); return; } setLayout(next); setSheet(false); const at = next.items.find(item => item.id === info.id)!.page; if (at !== page) go(at); }}>
-            <i className={`home-edit-thumb is-${info.id}`} aria-hidden="true" />
+            <i className={`home-edit-thumb ${info.id.startsWith('cw_') ? 'is-custom' : `is-${info.id}`}`} aria-hidden="true" />
             <b>{info.name}</b>
-            <small>{info.w}×{info.h} · {placed ? `在第 ${placed.page + 1} 页` : '点一下加进来'}</small>
+            <small>{info.w}×{info.h} · {placed ? `在第 ${placed.page + 1} 页` : info.id.startsWith('cw_') ? '自己做的' : '点一下加进来'}</small>
           </button>;
         })}
+        {onCreate && <button type="button" className="home-edit-card is-new" onClick={() => { setSheet(false); onCreate(); }}><i className="home-edit-thumb" aria-hidden="true">＋</i><b>自己做一个</b><small>写 HTML 和 CSS</small></button>}
+        {onImport && <button type="button" className="home-edit-card is-new" onClick={() => { setSheet(false); onImport(); }}><i className="home-edit-thumb" aria-hidden="true">⇩</i><b>导入组件</b><small>别人做的 .json</small></button>}
       </div>
     </div>}{layer}</div>
   </>;

@@ -7,10 +7,10 @@ import { useHomePlayer, formatPlayerTime } from '../../hooks/useHomePlayer';
 import { useHomeAvatarUpload } from '../../hooks/useHomeAvatarUpload';
 import { DeviceStatusBar } from './components/DeviceStatusBar';
 import { HomeNotice } from './components/HomeNotice';
-import { memo, useCallback, useState } from 'react';
+import { memo, useCallback, useRef, useState } from 'react';
 import type { ReactNode } from 'react';
 import { HomeGrid } from './components/HomeGrid';
-import { dropEmptyPages } from '../../utils/homeLayout';
+import { addItem, dropEmptyPages, normalize } from '../../utils/homeLayout';
 import type { HomeItemId, HomeLayout } from '../../utils/homeLayout';
 import { readLayout, writeLayout } from '../../utils/homeLayoutStore';
 import { Memos } from '../Memos/Memos';
@@ -22,6 +22,13 @@ import { useHomePagination } from '../../hooks/useHomePagination';
 import { TamaPet } from './components/TamaPet';
 import { HomeCalendar, HomeHello, HomeLogin, HomeWidgetEditor, useHomeWidgets } from './components/HomeWidgets';
 import type { WidgetId } from '../../utils/homeWidgets';
+import { CustomWidgetEditor, HomeCustomWidget, useCustomWidgets } from './components/HomeCustom';
+import { CUSTOM_EXAMPLES, newCustomId } from '../../utils/customWidgetCore';
+import type { CustomWidget } from '../../utils/customWidgetCore';
+import { customImageSlot, deleteCustomWidget, putCustomWidget } from '../../utils/customWidgets';
+import { importCustom } from '../../utils/customWidgetFile';
+import { saveImageSlots } from '../../utils/imageAssets';
+import { showToast } from '../../utils/toast';
 import { OriginalComment } from "../../components/shared/OriginalComment";
 import { World } from "../World/World";
 import { Chat } from "../Chat/Chat";
@@ -48,12 +55,49 @@ export function Home() {
   const [layout, setLayout] = useState(readLayout), [editing, setEditing] = useState(false);
   const pagination = useHomePagination(layout.pages, editing);
   const saveLayout = useCallback((next: HomeLayout) => { setLayout(next); writeLayout(next); }, []);
+  const layoutRef = useRef(layout); layoutRef.current = layout;
   /** 离开编辑时把空的页拿掉。 */
-  const finishOrStart = useCallback((next: boolean) => { setEditing(next); if (!next) { setConfiguring(null); setLayout(current => { const cleaned = dropEmptyPages(current); writeLayout(cleaned); return cleaned; }); } }, []);
+  const finishOrStart = useCallback((next: boolean) => { setEditing(next); if (!next) { setConfiguring(null); setCustomEdit(null); setLayout(current => { const cleaned = dropEmptyPages(current); writeLayout(cleaned); return cleaned; }); } }, []);
   /** 一句话、登录框、日历：自己写的字和图；configuring = 正在设定哪一个 */
   const widgets = useHomeWidgets(), [configuring, setConfiguring] = useState<WidgetId | null>(null);
+  /** 自己做的组件；customEdit = 正在编辑哪一个（isNew：还没存过） */
+  const custom = useCustomWidgets(), [customEdit, setCustomEdit] = useState<{ widget: CustomWidget; isNew: boolean } | null>(null), importInput = useRef<HTMLInputElement>(null);
+  /** 存好以后：新的放进现在这页；改过大小的重新排（叠到别人就挪位子）。 */
+  function saveCustom(widget: CustomWidget, isNew: boolean) {
+    try { putCustomWidget(widget); } catch (error) { showToast((error as Error).message); return; }
+    const current = normalize(layoutRef.current);
+    if (isNew) {
+      const next = addItem(current, widget.id, pagination.page);
+      if (!next) showToast('放不下了，先挪出一点空位，再从「加组件」加进来');
+      saveLayout(next || current);
+      const at = next?.items.find(item => item.id === widget.id)?.page;
+      if (at !== undefined && at !== pagination.page) pagination.jump(at);
+    } else saveLayout(current);
+    setCustomEdit(null);
+  }
+  function deleteCustom(widget: CustomWidget) {
+    deleteCustomWidget(widget.id);
+    void saveImageSlots({ [customImageSlot(widget.id)]: '' }).catch(() => {});
+    saveLayout(normalize(layoutRef.current));
+    setCustomEdit(null);
+  }
+  /** 关掉不存：新做的那个如果已经选了照片，照片也拿掉。 */
+  function cancelCustom() {
+    if (customEdit?.isNew) void saveImageSlots({ [customImageSlot(customEdit.widget.id)]: '' }).catch(() => {});
+    setCustomEdit(null);
+  }
+  async function importFile(file?: File) {
+    if (!file) return;
+    try {
+      const widget = await importCustom(file), current = normalize(layoutRef.current), next = addItem(current, widget.id, pagination.page);
+      saveLayout(next || current);
+      showToast(next ? `导入「${widget.name}」了` : `导入「${widget.name}」了，放不下，先挪出空位再从「加组件」加`);
+    } catch (error) { showToast((error as Error).message || '没导入成'); }
+  }
+  const startCustom = () => { const example = CUSTOM_EXAMPLES[0]; setConfiguring(null); setCustomEdit({ isNew: true, widget: { id: newCustomId(), name: '我的组件', w: example.w, h: example.h, html: example.html, css: example.css, open: '', who: '' } }); };
   /** 主画面上的每个东西（摆在哪里由 HomeGrid 照排法放）。 */
-  const blocks: Record<HomeItemId, ReactNode> = {
+  const blocks: Partial<Record<HomeItemId, ReactNode>> = {
+    ...Object.fromEntries(custom.list.map(widget => [widget.id, <HomeCustomWidget widget={widget} photo={custom.photos[widget.id] || ''} />])),
     main: (
       <div className="widget-card">
         {"\n"}
@@ -812,14 +856,21 @@ export function Home() {
       {"\n"}
       <OriginalComment text={" 主画面的格子：头像和播放器、图标、电子宠物、消息小窗照排法摆；长按进编辑，可以拖着换位置、收起组件 "} />
       <HomeGrid layout={layout} setLayout={saveLayout} page={pagination.page} go={pagination.jump} blocks={blocks} editing={editing} setEditing={finishOrStart} inert={navigation.spaceOpen}
-        configurable={WIDGET_ITEMS} onConfigure={id => setConfiguring(id as WidgetId | null)}
-        layer={configuring && <HomeWidgetEditor id={configuring} onClose={() => setConfiguring(null)} />} />
+        configurable={[...WIDGET_ITEMS, ...custom.list.map(widget => widget.id)]}
+        onConfigure={id => {
+          const own = id ? custom.list.find(widget => widget.id === id) : undefined;
+          if (own) { setConfiguring(null); setCustomEdit({ widget: own, isNew: false }); } else { setCustomEdit(null); setConfiguring(id as WidgetId | null); }
+        }}
+        onCreate={startCustom} onImport={() => { if (importInput.current) { importInput.current.value = ''; importInput.current.click(); } }}
+        layer={customEdit ? <CustomWidgetEditor key={customEdit.widget.id} initial={customEdit.widget} isNew={customEdit.isNew} onSave={widget => saveCustom(widget, customEdit.isNew)} onCancel={cancelCustom} onDelete={() => deleteCustom(customEdit.widget)} />
+          : configuring && <HomeWidgetEditor id={configuring} onClose={() => setConfiguring(null)} />} />
         <OriginalComment text={" 换 Star / Moon 头像用的隐藏上传框（原本放在拍立得里） "} />
         {"\n"}
         <input type="file" id="starAvatarInput" ref={starAvatar.input} onChange={event => starAvatar.upload(event.currentTarget.files?.[0])} accept="image/*" style={{
         "display": "none"
       }} />
         {"\n"}
+        <input type="file" id="customWidgetImport" ref={importInput} accept="application/json,.json" style={{ display: 'none' }} onChange={event => void importFile(event.currentTarget.files?.[0])} />
         <input type="file" id="moonAvatarInput" ref={moonAvatar.input} onChange={event => moonAvatar.upload(event.currentTarget.files?.[0])} accept="image/*" style={{
         "display": "none"
       }} />
