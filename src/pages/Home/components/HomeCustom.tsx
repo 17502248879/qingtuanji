@@ -133,7 +133,7 @@ export function CustomWidgetEditor({ initial, isNew, onSave, onCancel, onDelete 
   }
   function assets() {
     choice.openChoice({ style: 'settings', title: '美化素材', options: [], selected: '', confirmText: '好了', confirm: () => {},
-      content: <AssetPicker pick={(item: CssAssetInfo) => { choice.close(); insert(`<img src="asset:${item.name}" alt="">`, `url(asset:${item.name})`); }} menu={() => showToast('改名、删除素材请到美化设置')} /> });
+      content: <AssetPicker key={Date.now()} where="widget" pick={(item: CssAssetInfo) => { choice.close(); insert(`<img src="asset:${item.name}" alt="">`, `url(asset:${item.name})`); }} menu={() => showToast('改名、删除素材请到美化设置')} /> });
   }
   async function pickPhoto(file?: File) {
     if (!file) return;

@@ -106,7 +106,7 @@ export function CssWindow({ config }: { config: CssWindowConfig }) {
   /** 美化素材：点一张把 url(asset:名字) 加进编辑框；长按改名、删除；最后一格上传。 */
   function assets() {
     choice.openChoice({ style: 'settings', title: '美化素材', options: [], selected: '', confirmText: '好了', confirm: () => {},
-      content: <AssetPicker pick={item => { choice.close(); insert(assetRef(item.name)); }} menu={item => { choice.close(); window.setTimeout(() => assetMenu(item), 280); }} /> });
+      content: <AssetPicker key={Date.now()} where={config.id === 'homeCssGroup' ? 'home' : 'chat'} pick={item => { choice.close(); insert(assetRef(item.name)); }} menu={item => { choice.close(); window.setTimeout(() => assetMenu(item), 280); }} /> });
   }
   function assetMenu(item: CssAssetInfo) {
     choice.openChoice({ style: 'settings', title: item.name, options: [{ value: 'rename', label: '改名（写过的地方会跟着换）' }, { value: 'delete', label: '删除' }], selected: '',
@@ -195,10 +195,40 @@ function NameField({ store, placeholder = '模板名字，例如：粉色便利�
 }
 
 /** 素材小窗的内容：缩图格子，最后一格上传（可以一次选好几张）。 */
-export function AssetPicker({ pick, menu }: { pick: (item: CssAssetInfo) => void; menu: (item: CssAssetInfo) => void }) {
-  const [items, setItems] = useState(listCssAssets), [busy, setBusy] = useState(false);
+/** 素材的用法：照在哪里打开的（聊天美化、主画面美化、自己做的组件）给几个常用写法。 */
+export type AssetWhere = 'chat' | 'home' | 'widget';
+const ASSET_EXAMPLES: Record<AssetWhere, { title: string; rows: [string, string][] }> = {
+  chat: { title: '聊天美化（写在 CSS 里）', rows: [
+    ['#chatRoomView {\n  background: url(asset:名字) center / cover;\n}', '整个聊天室换成这张图当底'],
+    ['.chat-message-row.is-user .chat-bubble {\n  background: url(asset:名字) center / cover;\n}', '我的泡泡用这张图当底（他的把 is-user 换成 is-chat）'],
+    ['.chat-message-row.is-user .chat-bubble::after {\n  content: \'\';\n  position: absolute;\n  right: -6px; top: -8px;\n  width: 22px; height: 22px;\n  background: url(asset:名字) center / contain no-repeat;\n}', '泡泡右上角贴一张小贴纸']] },
+  home: { title: '主画面美化（写在 CSS 里）', rows: [
+    ['.dock-bar {\n  background: url(asset:名字) center / cover;\n}', '底下那排换成这张图当底'],
+    ['.mp3-player::after {\n  content: \'\';\n  position: absolute;\n  right: 10px; top: -14px;\n  width: 40px; height: 40px;\n  background: url(asset:名字) center / contain no-repeat;\n}', '播放器右上角贴一张小贴纸'],
+    ['.app-card {\n  background: url(asset:名字) center / cover;\n}', '每个图标的底换成这张图']] },
+  widget: { title: '自己做的组件', rows: [
+    ['<img src="asset:名字" alt="">', '在 HTML 分页点一张图：放一张图（照片、贴纸）'],
+    ['.box {\n  background: url(asset:名字) center / cover;\n}', '在 CSS 分页点一张图：当成某一块的底图']] }
+};
+function AssetHelp({ where }: { where: AssetWhere }) {
+  const order: AssetWhere[] = [where, ...(['chat', 'home', 'widget'] as AssetWhere[]).filter(item => item !== where)];
+  return <div className="css-asset-help">
+    <p className="css-asset-help-step"><b>1</b>点最后一格「＋ 上传图片」把图放进来，一次可以选好几张。名字照档名取，长按可以改。</p>
+    <p className="css-asset-help-step"><b>2</b>{where === 'widget' ? '在编辑框里点一张，就会把写法插到游标的位置。' : '在编辑框里点一张，就会把 url(asset:名字) 插到游标的位置，再照下面的例子放进 background 后面。'}</p>
+    {order.map((key, index) => <div key={key} className={index ? 'css-asset-help-other' : ''}>
+      <p className="chat-css-cheat-title">{index ? `用在${ASSET_EXAMPLES[key].title}` : ASSET_EXAMPLES[key].title}</p>
+      {ASSET_EXAMPLES[key].rows.map(([code, note]) => <div key={code} className="chat-css-cheat-row css-asset-help-row"><code>{code}</code><span>{note}</span></div>)}
+    </div>)}
+    <p className="chat-css-cheat-tip">「名字」换成素材的名字。center / cover：铺满、多的裁掉；center / contain no-repeat：整张放进去、不裁。<br />一张超过 2MB 会自动缩小，最多 60 张，存在这台手机里。导出 CSS、组件、主题方案时，用到的图会一起打包。素材删掉后，用到它的地方会变成透明的。</p>
+  </div>;
+}
+
+export function AssetPicker({ pick, menu, where = 'chat' }: { pick: (item: CssAssetInfo) => void; menu: (item: CssAssetInfo) => void; where?: AssetWhere }) {
+  const [items, setItems] = useState(listCssAssets), [busy, setBusy] = useState(false), [help, setHelp] = useState(() => !listCssAssets().length);
   const input = useRef<HTMLInputElement>(null), press = useRef(0), pressed = useRef(false);
-  useEffect(() => { const sync = () => setItems(listCssAssets()); void loadCssAssets().then(sync); window.addEventListener(CSS_ASSETS_EVENT, sync); return () => window.removeEventListener(CSS_ASSETS_EVENT, sync); }, []);
+  // 说明：还没有素材时先打开；素材读好以后有图了就收起来（自己点过就照自己的）
+  const touched = useRef(false);
+  useEffect(() => { const sync = () => setItems(listCssAssets()); void loadCssAssets().then(() => { sync(); if (!touched.current) setHelp(!listCssAssets().length); }); window.addEventListener(CSS_ASSETS_EVENT, sync); return () => window.removeEventListener(CSS_ASSETS_EVENT, sync); }, []);
   async function upload(event: ChangeEvent<HTMLInputElement>) {
     const files = [...(event.currentTarget.files || [])]; event.currentTarget.value = '';
     if (!files.length) return;
@@ -211,6 +241,10 @@ export function AssetPicker({ pick, menu }: { pick: (item: CssAssetInfo) => void
   const end = () => window.clearTimeout(press.current);
   const kb = (size: number) => size >= 1024 * 1024 ? `${(size / 1024 / 1024).toFixed(1)}MB` : `${Math.max(1, Math.round(size / 1024))}KB`;
   return <div className="css-asset-picker">
+    <button type="button" className="css-asset-help-toggle" aria-expanded={help} onClick={() => { touched.current = true; setHelp(open => !open); }}>
+      <span>怎么用？</span><svg viewBox="0 0 10 6" fill="none" stroke="currentColor" strokeWidth="1.3" aria-hidden="true"><path d={help ? 'M1 5l4-4 4 4' : 'M1 1l4 4 4-4'} /></svg>
+    </button>
+    {help && <AssetHelp where={where} />}
     <div className="css-asset-grid">
       {items.map(item => <button type="button" key={item.name} className="css-asset-item"
         onClick={() => { if (pressed.current) { pressed.current = false; return; } pick(item); }}
@@ -226,6 +260,6 @@ export function AssetPicker({ pick, menu }: { pick: (item: CssAssetInfo) => void
       </button>
     </div>
     <input ref={input} type="file" accept="image/png,image/jpeg,image/webp,image/gif,image/svg+xml,image/avif" multiple hidden onChange={event => void upload(event)} />
-    <p className="chat-css-cheat-tip">点一张就把 url(asset:名字) 加进编辑框；长按可以改名、删除。聊天美化和主画面美化共用这些素材，图片存在手机里，导出 .css 时会一起打包。</p>
+    <p className="chat-css-cheat-tip">{where === 'widget' ? '点一张就插进编辑框。改名、删除请到美化设置的素材里长按。' : '点一张就把 url(asset:名字) 加进编辑框；长按可以改名、删除。'}聊天美化、主画面美化、自己做的组件共用这些素材。</p>
   </div>;
 }
