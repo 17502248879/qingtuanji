@@ -1,14 +1,16 @@
 import { useRef, useState } from 'react';
 import type { MouseEvent, PointerEvent, TouchEvent } from 'react';
 const IGNORE = '#progressBarBg, .chat-app-page, .world-page, #dockBar, input, textarea, [contenteditable="true"]';
-/** 主画面翻页：左右滑、点小圆点。disabled（编辑主画面时）不理滑动；jump 直接跳到第几页（编辑时开新页用，不绕圈）。 */
-export function useHomePagination(count = 2, disabled = false) {
+/** 编辑主画面时，这些地方滑了不翻页：组件和图标（按住是要拖）、加组件、设定、编辑窗、最上面那排按钮。 */
+const EDIT_IGNORE = '.home-slot, .home-edit-sheet, .home-cw-editor, .home-edit-bar, #viChoiceModal';
+/** 主画面翻页：左右滑、点小圆点。editing（编辑主画面时）从空白的地方滑才翻页；jump 直接跳到第几页（编辑时开新页用，不绕圈）。 */
+export function useHomePagination(count = 2, editing = false) {
   const [raw,setPage]=useState(0);
   const page=Math.max(0,Math.min(count-1,raw));
   const latest=useRef(page);latest.current=page;
   const gesture=useRef({x:0,y:0,tracking:false});
   const go=(n:number)=>setPage(((n%count)+count)%count);
-  function start(x:number,y:number,target:EventTarget|null) { gesture.current={x,y,tracking:!disabled&&!(target instanceof Element && target.closest(IGNORE))}; }
+  function start(x:number,y:number,target:EventTarget|null) { const element=target instanceof Element?target:null; gesture.current={x,y,tracking:!element?.closest(IGNORE)&&!(editing&&element?.closest(EDIT_IGNORE))}; }
   function end(x:number,y:number) {
     if(!gesture.current.tracking)return;
     const {x:sx,y:sy}=gesture.current;gesture.current.tracking=false;
