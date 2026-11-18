@@ -44,5 +44,146 @@ export const HOME_EXAMPLES: { name: string; css: string }[] = [
   { name: '只换颜色', css: `/* 只想换颜色：改这几行，删掉不想改的 */
 #main-content {
   --theme-accent: #e3c6b0;  /* 主画面的主题色：框线、图标、按钮、播放器一起换 */
-}` }
+}` },
+  { name: '推し杂志', css: `/* 推し杂志风：粉 + 黑 + 一点蓝，粗黑框、错开的粉色投影、黑底白字标签、斜纹和网点 */
+#main-content {
+  --theme-accent: #f19cbc;
+  --home-ink: #2b2228;
+  --color-text: #2b2228;
+  --color-muted: #c47e9c;
+  --color-surface: #fffafc;
+  --color-surface-rgb: 255, 250, 252;
+  background:
+    radial-gradient(#f6c4d8 1px, transparent 1.3px) 0 0 / 14px 14px,
+    repeating-linear-gradient(135deg, #fff8fb 0 12px, #fdeff5 12px 24px);
+}
+
+/* 最上面：杂志的刊头小字 */
+.ios-status-bar::after {
+  content: 'PRIVATE OSHI COLLECTION · VOL.01';
+  position: absolute;
+  left: 0; right: 0; top: 33px;
+  color: #e0558f;
+  font: italic 700 7.5px/1 Georgia, 'Times New Roman', serif;
+  letter-spacing: 2px;
+  text-align: center;
+}
+
+/* 头像：白边相片、粗黑框、粉色投影，上面贴一条胶带，两张歪一点 */
+.earphone-wires { display: none; }
+.avatar-inner-circle {
+  border: 2px solid #2b2228;
+  border-radius: 0;
+  background: #fff;
+  box-shadow: 4px 4px 0 #f19cbc;
+}
+.avatar-inner-circle img { border-radius: 0; }
+#starAvatarWrap { transform: rotate(-3deg); }
+#moonAvatarWrap { transform: rotate(3deg); }
+.avatar-frame-container::before {
+  content: '';
+  position: absolute;
+  left: 50%; top: 2px; z-index: 3;
+  width: 46px; height: 14px;
+  margin-left: -23px;
+  background: rgba(124, 156, 242, .55);
+  transform: rotate(-4deg);
+}
+/* 头像上面的话：黑底白字的标签 */
+.bubble-text-layer {
+  background: #2b2228;
+  border-radius: 0;
+  box-shadow: 3px 3px 0 #f19cbc;
+}
+.bubble-text { color: #fff; font-style: italic; }
+.heart-icon { color: #e0558f; }
+.subtitle {
+  color: #e0558f;
+  font: italic 700 12px Georgia, 'Times New Roman', serif;
+  letter-spacing: .5px;
+}
+
+/* 播放器：白纸卡片 + 粗黑框 + 粉色投影，左上角一张 ISSUE 标签 */
+.mp3-player {
+  border: 2px solid #2b2228;
+  border-radius: 4px;
+  background: #fff;
+  box-shadow: 5px 5px 0 #f19cbc;
+  overflow: visible;
+}
+.mp3-player::before {
+  content: 'ISSUE 01';
+  position: absolute;
+  inset: auto;
+  left: 14px; top: -9px; z-index: 2;
+  width: auto; height: auto;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  opacity: 1;
+  -webkit-mask: none;
+  mask: none;
+  filter: none;
+  padding: 2px 7px;
+  background: #e0558f;
+  color: #fff;
+  font: italic 700 8px/1.2 Georgia, serif;
+  letter-spacing: 1.5px;
+}
+.mp3-screen {
+  border: 1.5px solid #2b2228;
+  border-radius: 2px;
+  background: radial-gradient(#f6c4d8 1px, transparent 1.3px) 0 0 / 6px 6px, #fff6fa;
+  box-shadow: none;
+}
+.song-title { color: #e0558f; font-style: italic; }
+.mp3-brand { color: #2b2228; font-style: italic; letter-spacing: 2px; }
+.mp3-player .controls {
+  border: 2px solid #2b2228;
+  background: repeating-linear-gradient(135deg, #fff 0 6px, #fde4ee 6px 12px);
+  box-shadow: 3px 3px 0 #2b2228;
+}
+
+/* 图标：白卡 + 粗黑框 + 投影（记账、世界书粉色，备忘录、记忆蓝色），名字是黑底白字小标签 */
+.app-card {
+  border: 2px solid #2b2228;
+  border-radius: 6px;
+  background: #fff;
+  box-shadow: 3px 3px 0 #f19cbc;
+}
+.app-item[data-app-icon-key="memos"] .app-card,
+.app-item[data-app-icon-key="memories"] .app-card { background: #eef2ff; box-shadow: 3px 3px 0 #7c9cf2; }
+.icon-box { background: none; box-shadow: none; }
+.app-label-cn {
+  margin-top: 5px;
+  padding: 1px 6px;
+  background: #2b2228;
+  color: #fff;
+  font: italic 9.5px/1.5 Georgia, 'Times New Roman', serif;
+  letter-spacing: .5px;
+}
+
+/* 电子宠物：外面加一道粉色投影 */
+.tama-widget { filter: drop-shadow(4px 4px 0 #f19cbc); }
+
+/* 消息小窗：黑色标题栏 */
+.home-notice { border: 2px solid #2b2228; box-shadow: 4px 4px 0 #f19cbc; }
+.home-notice-bar { background: #2b2228; color: #fff; border-bottom: 0; }
+.home-notice-title, .home-notice-title em { color: #fff; font-style: italic; }
+.home-notice-btns { background: #fff; }
+
+/* 页数小点：粉色小菱形 */
+.home-dot { border-color: #2b2228; transform: rotate(45deg); }
+.home-dot.active { background: #e0558f; }
+
+/* 底下那排：白卡粗黑框，现在这页是粉色 */
+.dock-bar {
+  border: 2px solid #2b2228;
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: 4px 4px 0 #f19cbc;
+}
+.dock-item { border-radius: 6px; }
+.dock-item.active { border: 1.5px solid #2b2228; background: #fde4ee; box-shadow: 2px 2px 0 #2b2228; }
+.dock-item span { color: #2b2228; font-style: italic; }` }
 ];
