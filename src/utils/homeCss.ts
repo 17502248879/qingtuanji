@@ -44,5 +44,393 @@ export const HOME_EXAMPLES: { name: string; css: string }[] = [
   { name: '只换颜色', css: `/* 只想换颜色：改这几行，删掉不想改的 */
 #main-content {
   --theme-accent: #e3c6b0;  /* 主画面的主题色：框线、图标、按钮、播放器一起换 */
-}` }
+}` },
+  { name: '推し杂志', css: `/* 推し杂志风：粉 + 黑 + 一点蓝，粗黑框、错开的粉色投影、黑底白字标签、斜纹和网点 */
+#main-content {
+  --theme-accent: #f19cbc;
+  --home-ink: #2b2228;
+  --color-text: #2b2228;
+  --color-muted: #c47e9c;
+  --color-surface: #fffafc;
+  --color-surface-rgb: 255, 250, 252;
+  background:
+    radial-gradient(#f6c4d8 1px, transparent 1.3px) 0 0 / 14px 14px,
+    repeating-linear-gradient(135deg, #fff8fb 0 12px, #fdeff5 12px 24px);
+}
+
+/* 最上面：杂志的刊头小字 */
+.ios-status-bar::after {
+  content: 'PRIVATE OSHI COLLECTION · VOL.01';
+  position: absolute;
+  left: 0; right: 0; top: 33px;
+  color: #e0558f;
+  font: italic 700 7.5px/1 Georgia, 'Times New Roman', serif;
+  letter-spacing: 2px;
+  text-align: center;
+}
+
+/* 头像：白边相片、粗黑框、粉色投影，上面贴一条胶带，两张歪一点 */
+.earphone-wires { display: none; }
+.avatar-inner-circle {
+  border: 2px solid #2b2228;
+  border-radius: 0;
+  background: #fff;
+  box-shadow: 4px 4px 0 #f19cbc;
+}
+.avatar-inner-circle img { border-radius: 0; }
+#starAvatarWrap { transform: rotate(-3deg); }
+#moonAvatarWrap { transform: rotate(3deg); }
+.avatar-frame-container::before {
+  content: '';
+  position: absolute;
+  left: 50%; top: 2px; z-index: 3;
+  width: 46px; height: 14px;
+  margin-left: -23px;
+  background: rgba(124, 156, 242, .55);
+  transform: rotate(-4deg);
+}
+/* 头像上的话：整个对话框换成黑底白字的标签（原本的像素框和像素尖角拿掉），下面一个黑色小尖角 */
+.speech-bubble-container {
+  background: #2b2228;
+  border-radius: 0;
+  box-shadow: 3px 3px 0 #f19cbc;
+  filter: none;
+}
+.bubble-text-layer { background: none; box-shadow: none; }
+.speech-bubble-container::before { display: none; }
+.speech-bubble-container::after {
+  top: 100%;
+  width: 0; height: 0;
+  margin-left: -5px;
+  border: 5px solid transparent;
+  border-top-color: #2b2228;
+  background: none;
+  -webkit-mask: none;
+  mask: none;
+}
+.bubble-text { color: #fff; font-style: italic; }
+.heart-icon { color: #e0558f; }
+.subtitle {
+  color: #e0558f;
+  font: italic 700 12px Georgia, 'Times New Roman', serif;
+  letter-spacing: .5px;
+}
+
+/* 播放器：白纸卡片 + 粗黑框 + 粉色投影，左上角一张 ISSUE 标签 */
+.mp3-player {
+  border: 2px solid #2b2228;
+  border-radius: 4px;
+  background: #fff;
+  box-shadow: 5px 5px 0 #f19cbc;
+  overflow: visible;
+}
+.mp3-player::before {
+  content: 'ISSUE 01';
+  position: absolute;
+  inset: auto;
+  left: 14px; top: -9px; z-index: 2;
+  width: auto; height: auto;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
+  opacity: 1;
+  -webkit-mask: none;
+  mask: none;
+  filter: none;
+  padding: 2px 7px;
+  background: #e0558f;
+  color: #fff;
+  font: italic 700 8px/1.2 Georgia, serif;
+  letter-spacing: 1.5px;
+}
+.mp3-screen {
+  border: 2px solid #2b2228;
+  border-radius: 2px;
+  background: radial-gradient(#f6c4d8 1px, transparent 1.3px) 0 0 / 6px 6px, #fff6fa;
+  box-shadow: none;
+  color: #2b2228;
+}
+/* 屏幕外面原本那圈塑料边、斜斜的反光拿掉 */
+.mp3-player .mp3-screen::before,
+.mp3-player .mp3-screen::after { display: none; }
+/* 状态行：PAUSE 变成黑底白字小标签，下面一条粗黑线 */
+.mp3-player .mp3-status { border-bottom: 1.5px solid #2b2228; }
+.mp3-mode { flex: 0 0 auto; padding: 0 5px; background: #2b2228; color: #fff; font-style: italic; letter-spacing: 1px; }
+.song-title { color: #e0558f; font-style: italic; }
+.song-details { color: #2b2228; }
+/* 进度条：黑框，走过的是粉色 */
+.mp3-player .progress-bar-bg { border: 1.5px solid #2b2228; border-radius: 0; background: #fff; }
+.mp3-player .progress-bar-fill { border-radius: 0; background: #e0558f; }
+.mp3-player .player-mini-cover { border: 1.5px solid #2b2228; border-radius: 0; box-shadow: 2px 2px 0 #f19cbc; }
+.mp3-brand { color: #2b2228; font-style: italic; letter-spacing: 2px; }
+/* 右边的按钮盘：斜纹底、粗黑框；播放键是黑底白字的圆，其他按钮黑色 */
+.mp3-player .controls {
+  border: 2px solid #2b2228;
+  background: repeating-linear-gradient(135deg, #fff 0 6px, #fde4ee 6px 12px);
+  box-shadow: 3px 3px 0 #2b2228;
+}
+.mp3-player .controls .btn { color: #2b2228; }
+.mp3-player .controls .btn svg { color: #2b2228; fill: currentColor; }
+.mp3-player .controls .btn-play {
+  border: 2px solid #2b2228;
+  background: #2b2228;
+  box-shadow: 2px 2px 0 #f19cbc;
+  color: #fff;
+}
+.mp3-player .controls .btn-play svg { color: #fff; fill: #fff; }
+.mp3-player .controls .btn-star.starred svg,
+.mp3-player .controls .btn-heart.liked svg { color: #e0558f; fill: #e0558f; }
+
+/* 图标：白卡 + 粗黑框 + 投影（记账、世界书粉色，备忘录、记忆蓝色），名字是黑底白字小标签 */
+.app-card {
+  border: 2px solid #2b2228;
+  border-radius: 6px;
+  background: #fff;
+  box-shadow: 3px 3px 0 #f19cbc;
+}
+.app-item[data-app-icon-key="memos"] .app-card,
+.app-item[data-app-icon-key="memories"] .app-card { background: #eef2ff; box-shadow: 3px 3px 0 #7c9cf2; }
+.icon-box { background: none; box-shadow: none; }
+.app-label-cn {
+  margin-top: 5px;
+  padding: 1px 6px;
+  background: #2b2228;
+  color: #fff;
+  font: italic 9.5px/1.5 Georgia, 'Times New Roman', serif;
+  letter-spacing: .5px;
+}
+
+/* 电子宠物：白色蛋壳、粗黑框、粉色投影，上面一张 OSHI PET 标签；屏幕黑框网点底，按钮是白圆黑框 */
+.tama-widget {
+  border: 2px solid #2b2228;
+  background: radial-gradient(#f6c4d8 1px, transparent 1.3px) 0 0 / 9px 9px, #fff;
+  box-shadow: 4px 4px 0 #f19cbc;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+.tama-widget::after { display: none; }
+.tama-widget::before {
+  content: 'OSHI PET';
+  position: absolute;
+  left: 50%; top: 20px;
+  padding: 1px 7px;
+  background: #e0558f;
+  color: #fff;
+  font: italic 700 8px/1.4 Georgia, 'Times New Roman', serif;
+  letter-spacing: 1.5px;
+  white-space: nowrap;
+  transform: translateX(-50%) rotate(-3deg);
+}
+.tama-screen {
+  border: 2px solid #2b2228;
+  border-radius: 2px;
+  background: radial-gradient(#f6c4d8 1px, transparent 1.3px) 0 0 / 6px 6px, #fff6fa;
+  box-shadow: none;
+}
+.tama-screen::before { inset: -5px; border: 0; border-radius: 3px; background: #fde4ee; box-shadow: none; }
+.tama-btn {
+  border: 2px solid #2b2228;
+  background: #fff;
+  box-shadow: 2px 2px 0 #f19cbc;
+}
+.tama-btn .tb-x { fill: #2b2228; }
+.tama-btn .tb-w { fill: #fff; }
+
+/* 消息小窗：黑色标题栏 */
+.home-notice { border: 2px solid #2b2228; box-shadow: 4px 4px 0 #f19cbc; }
+.home-notice-bar { background: #2b2228; color: #fff; border-bottom: 0; }
+.home-notice-title, .home-notice-title em { color: #fff; font-style: italic; }
+.home-notice-btns { background: #fff; }
+
+/* 页数小点：粉色小菱形 */
+.home-dot { border-color: #2b2228; transform: rotate(45deg); }
+.home-dot.active { background: #e0558f; }
+
+/* 底下那排：白卡粗黑框，现在这页是粉色 */
+.dock-bar {
+  border: 2px solid #2b2228;
+  border-radius: 10px;
+  background: #fff;
+  box-shadow: 4px 4px 0 #f19cbc;
+}
+.dock-item { border-radius: 6px; }
+.dock-item.active { border: 1.5px solid #2b2228; background: #fde4ee; box-shadow: 2px 2px 0 #2b2228; }
+.dock-item span { color: #2b2228; font-style: italic; }` },
+  { name: '水光玻璃', css: `/* 水光玻璃：复古未来感——白色亮面塑料机身 + 半透明湖水蓝塑料，糖果色果冻按钮，深蓝亮面屏幕，背景是天空、草地和泡泡 */
+#main-content {
+  --theme-accent: #5ccbd6;
+  --home-ink: #1b4f6a;
+  --color-text: #1b4f6a;
+  --color-muted: #4fa8bd;
+  --color-surface: #f7fbfb;
+  --color-surface-rgb: 247, 251, 251;
+  /* 果冻按钮的颜色：绿、黄、蓝、橘、湖水蓝 */
+  --gel-hi: radial-gradient(ellipse 70% 45% at 50% 24%, rgba(255, 255, 255, .95), rgba(255, 255, 255, 0) 72%);
+  background:
+    radial-gradient(circle at 18% 22%, rgba(255, 255, 255, .9) 0 3px, rgba(255, 255, 255, .25) 4px 14px, transparent 15px),
+    radial-gradient(circle at 84% 14%, rgba(255, 255, 255, .9) 0 2px, rgba(255, 255, 255, .2) 3px 9px, transparent 10px),
+    radial-gradient(circle at 72% 46%, rgba(255, 255, 255, .85) 0 4px, rgba(255, 255, 255, .2) 5px 22px, transparent 23px),
+    radial-gradient(circle at 10% 68%, rgba(255, 255, 255, .85) 0 3px, rgba(255, 255, 255, .2) 4px 16px, transparent 17px),
+    radial-gradient(circle at 92% 78%, rgba(255, 255, 255, .8) 0 2px, rgba(255, 255, 255, .2) 3px 11px, transparent 12px),
+    radial-gradient(ellipse 120% 45% at 20% 108%, rgba(138, 214, 118, .75), transparent 60%),
+    radial-gradient(ellipse 90% 35% at 90% 104%, rgba(80, 200, 190, .6), transparent 62%),
+    radial-gradient(ellipse 80% 40% at 50% -5%, #ffffff, transparent 70%),
+    linear-gradient(180deg, #9fdcf6 0%, #cfeff9 45%, #eefaf8 100%);
+}
+
+/* 头像：白色塑料圆框，外面一圈半透明湖水蓝 */
+.avatar-inner-circle {
+  border: 3px solid #fff;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 0 0 5px rgba(63, 184, 198, .55), 0 0 0 6px rgba(255, 255, 255, .8), 0 7px 14px rgba(20, 90, 110, .3);
+  overflow: hidden;
+}
+.avatar-inner-circle img { border-radius: 50%; }
+.avatar-inner-circle::after {
+  content: '';
+  position: absolute;
+  left: 14%; top: 6%;
+  width: 72%; height: 38%;
+  border-radius: 50%;
+  background: linear-gradient(rgba(255, 255, 255, .7), rgba(255, 255, 255, 0));
+  pointer-events: none;
+}
+/* 头像上的话：整个对话框换成白色亮面胶囊（原本的像素框和像素尖角拿掉），下面一个小小的圆尖角 */
+.speech-bubble-container {
+  border: 1px solid #b9d6da;
+  border-radius: 999px;
+  background: linear-gradient(180deg, #ffffff 0%, #f3f8f8 48%, #e1ecec 52%, #f4f9f9 100%);
+  box-shadow: 0 3px 8px rgba(20, 90, 110, .22), inset 0 1px 0 #fff;
+  filter: none;
+}
+.bubble-text-layer { background: none; box-shadow: none; }
+.speech-bubble-container::before { display: none; }
+.speech-bubble-container::after {
+  top: 100%;
+  width: 0; height: 0;
+  margin-left: -5px;
+  border: 5px solid transparent;
+  border-top-color: #e6efef;
+  background: none;
+  -webkit-mask: none;
+  mask: none;
+  filter: drop-shadow(0 1px 0 #b9d6da);
+}
+.bubble-text { color: #1b4f6a; }
+.heart-icon { color: #3fb8c6; }
+.subtitle { color: #1b4f6a; text-shadow: 0 0 6px #fff, 0 0 2px #fff; }
+
+/* 播放器：白色亮面塑料机身，屏幕是深蓝亮面，下面一道半透明湖水蓝 */
+.mp3-player {
+  border: 1px solid #c4d7d9;
+  border-radius: 18px;
+  background: linear-gradient(180deg, #ffffff 0%, #f1f6f6 55%, #e2ecec 100%);
+  box-shadow: 0 9px 20px rgba(20, 90, 110, .26), inset 0 2px 0 #fff, inset 0 -6px 0 rgba(63, 184, 198, .35), inset 0 -7px 0 rgba(255, 255, 255, .6);
+}
+.mp3-screen {
+  border: 2px solid #1a4f7a;
+  border-radius: 8px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, .38) 0%, rgba(255, 255, 255, .06) 46%, rgba(255, 255, 255, 0) 47%), linear-gradient(180deg, #62c4ee, #1d6db2);
+  box-shadow: inset 0 0 10px rgba(0, 30, 70, .35);
+  color: #fff;
+}
+.mp3-player .mp3-screen::before { border: 1px solid #b5ccd0; border-radius: 12px; background: linear-gradient(180deg, #e9f1f2, #c9dcdf); box-shadow: inset 0 1px 0 #fff; }
+.mp3-player .mp3-status { border-bottom-color: rgba(255, 255, 255, .45); color: #fff; }
+.mp3-mode, .mp3-player .mp3-status { color: #fff; }
+.song-title { color: #fff; text-shadow: 0 1px 2px rgba(0, 40, 90, .5); }
+.song-details, .mp3-player .progress-container span { color: rgba(255, 255, 255, .85); }
+.mp3-player .player-mini-cover { border: 1px solid rgba(255, 255, 255, .8); border-radius: 6px; }
+.mp3-player .progress-bar-bg { border-radius: 99px; background: rgba(0, 30, 70, .35); box-shadow: inset 0 1px 2px rgba(0, 20, 50, .4); }
+.mp3-player .progress-bar-fill { border-radius: 99px; background: var(--gel-hi), linear-gradient(180deg, #c8f59a, #4fbf3f); }
+.mp3-brand { color: #3f9fb0; letter-spacing: 2px; }
+/* 按钮盘：白色塑料圆盘，外圈半透明湖水蓝；只有中间的播放键是绿色果冻，其他四个是彩色小图示（收藏黄、上下首蓝、喜欢橘） */
+.mp3-player .controls {
+  border: 3px solid rgba(63, 184, 198, .6);
+  background: radial-gradient(ellipse 70% 40% at 50% 20%, #fff, rgba(255, 255, 255, 0) 70%), linear-gradient(180deg, #fbfdfd, #dfeaeb);
+  box-shadow: 0 6px 14px rgba(20, 90, 110, .3), inset 0 -3px 6px rgba(20, 90, 110, .15);
+}
+.mp3-player .controls .btn { border: 0; background: none; box-shadow: none; }
+.mp3-player .controls .btn svg { fill: currentColor; filter: drop-shadow(0 1px 0 #fff); }
+.mp3-player .controls .btn-star { color: #f0a800; }
+.mp3-player .controls .btn-prev,
+.mp3-player .controls .btn-next { color: #1f7fd6; }
+.mp3-player .controls .btn-heart { color: #ff7a1a; }
+.mp3-player .controls .btn-play {
+  border: 1px solid rgba(30, 110, 30, .45);
+  background: var(--gel-hi), radial-gradient(circle at 50% 85%, #b4ee7e, #36a535);
+  box-shadow: 0 3px 8px rgba(40, 120, 40, .4), 0 0 0 3px rgba(255, 214, 90, .55);
+  color: #fff;
+}
+.mp3-player .controls .btn-play svg { color: #fff; fill: #fff; filter: drop-shadow(0 1px 1px rgba(0, 0, 0, .35)); }
+
+/* 图标：糖果色的果冻方块（记账绿、备忘录黄、世界书蓝、记忆橘、预设湖水蓝），图案白色；名字白字描深一点的边 */
+.app-card {
+  border: 1px solid rgba(0, 0, 0, .15);
+  border-radius: 16px;
+  background: var(--gel-hi), radial-gradient(circle at 50% 90%, #8fe3e8, #21a9b8);
+  box-shadow: 0 4px 9px rgba(20, 90, 110, .3), inset 0 -3px 5px rgba(0, 0, 0, .12);
+}
+.app-item[data-app-icon-key="ledger"] .app-card { background: var(--gel-hi), radial-gradient(circle at 50% 90%, #b4ee7e, #3aa53a); }
+.app-item[data-app-icon-key="memos"] .app-card { background: var(--gel-hi), radial-gradient(circle at 50% 90%, #ffe680, #efae00); }
+.app-item[data-app-icon-key="world"] .app-card { background: var(--gel-hi), radial-gradient(circle at 50% 90%, #8ad6ff, #1f7fd6); }
+.app-item[data-app-icon-key="memories"] .app-card { background: var(--gel-hi), radial-gradient(circle at 50% 90%, #ffc27a, #ff7a1a); }
+.icon-box { background: none; box-shadow: none; }
+.app-item svg.px-icon { filter: drop-shadow(0 1px 1px rgba(0, 0, 0, .3)); }
+.app-item svg.px-icon .px-x { fill: #fff; }
+.app-item svg.px-icon .px-o { fill: rgba(255, 255, 255, .6); }
+.app-item svg.px-icon .px-w { fill: rgba(255, 255, 255, .22); }
+.app-label-cn { color: #fff; text-shadow: 0 0 3px #1b5f7e, 0 1px 2px #1b4f6a; }
+
+/* 电子宠物：半透明湖水蓝塑料蛋（像老电脑那种），屏幕亮面浅蓝，按钮是黄、绿、蓝果冻 */
+.tama-widget {
+  border: 1px solid rgba(255, 255, 255, .85);
+  background: radial-gradient(ellipse 55% 30% at 34% 15%, rgba(255, 255, 255, .85), rgba(255, 255, 255, 0) 70%), linear-gradient(165deg, rgba(140, 222, 230, .7), rgba(28, 160, 178, .82));
+  box-shadow: 0 9px 18px rgba(20, 90, 110, .32), inset 0 -10px 16px rgba(10, 90, 110, .3), inset 0 2px 0 rgba(255, 255, 255, .9);
+}
+.tama-screen {
+  border: 2px solid #1a4f7a;
+  border-radius: 6px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, .55) 0%, rgba(255, 255, 255, 0) 50%), linear-gradient(180deg, #e6f8ff, #a8dcf3);
+}
+.tama-screen::before { border: 1px solid rgba(255, 255, 255, .9); border-radius: 10px; background: linear-gradient(180deg, #ffffff, #dce9eb); }
+.tama-btn { border: 1px solid rgba(0, 0, 0, .18); box-shadow: 0 2px 4px rgba(0, 0, 0, .25), inset 0 -2px 3px rgba(0, 0, 0, .12); background: var(--gel-hi), radial-gradient(circle at 50% 85%, #ffe680, #f0b000); }
+.tama-btn:nth-child(2) { background: var(--gel-hi), radial-gradient(circle at 50% 85%, #b4ee7e, #36a535); }
+.tama-btn:nth-child(3) { background: var(--gel-hi), radial-gradient(circle at 50% 85%, #8ad6ff, #1f7fd6); }
+.tama-btn .tb-x { fill: #fff; }
+.tama-btn .tb-w { fill: rgba(0, 0, 0, .25); }
+
+/* 消息小窗：白色小窗，标题栏是深蓝亮面 */
+.home-notice {
+  border: 1px solid #9fc3cf;
+  border-radius: 10px;
+  overflow: hidden;
+  background: linear-gradient(180deg, #ffffff, #eef5f6);
+  box-shadow: 0 6px 16px rgba(20, 90, 110, .25);
+}
+.home-notice-bar { border-bottom: 1px solid #1a4f7a; background: linear-gradient(180deg, rgba(255, 255, 255, .4) 0%, rgba(255, 255, 255, .06) 48%, rgba(255, 255, 255, 0) 50%), linear-gradient(180deg, #5cbfea, #1f6db0); color: #fff; }
+.home-notice-title, .home-notice-title em { color: #fff; }
+.home-notice-btns { background: #fff; }
+
+/* 页数小点：小泡泡 */
+.home-dot { border: 1px solid rgba(255, 255, 255, .95); border-radius: 50%; background: rgba(63, 184, 198, .45); box-shadow: 0 1px 3px rgba(20, 90, 110, .3); }
+.home-dot.active { background: var(--gel-hi), radial-gradient(circle at 50% 85%, #b4ee7e, #36a535); }
+
+/* 底下那排：白色亮面塑料，下面一道湖水蓝；现在这页那颗是绿色果冻 */
+.dock-bar {
+  border: 1px solid #c4d7d9;
+  border-radius: 22px;
+  background: linear-gradient(180deg, #ffffff 0%, #f1f6f6 55%, #e2ecec 100%);
+  box-shadow: 0 9px 20px rgba(20, 90, 110, .28), inset 0 2px 0 #fff, inset 0 -5px 0 rgba(63, 184, 198, .35);
+}
+.dock-item { border-radius: 16px; }
+.dock-item.active {
+  border: 1px solid rgba(30, 110, 30, .35);
+  background: var(--gel-hi), radial-gradient(circle at 50% 90%, #c8f59a, #4fbf3f);
+  box-shadow: 0 3px 8px rgba(40, 120, 40, .3);
+}
+.dock-item.active span { color: #fff; text-shadow: 0 1px 1px rgba(20, 80, 20, .5); }
+.dock-item.active svg.px-icon .px-x { fill: #fff; }
+.dock-item.active svg.px-icon .px-w { fill: rgba(255, 255, 255, .25); }
+.dock-item span { color: #1b4f6a; }` }
 ];
