@@ -131,18 +131,42 @@ export const HOME_EXAMPLES: { name: string; css: string }[] = [
   letter-spacing: 1.5px;
 }
 .mp3-screen {
-  border: 1.5px solid #2b2228;
+  border: 2px solid #2b2228;
   border-radius: 2px;
   background: radial-gradient(#f6c4d8 1px, transparent 1.3px) 0 0 / 6px 6px, #fff6fa;
   box-shadow: none;
+  color: #2b2228;
 }
+/* 屏幕外面原本那圈塑料边、斜斜的反光拿掉 */
+.mp3-player .mp3-screen::before,
+.mp3-player .mp3-screen::after { display: none; }
+/* 状态行：PAUSE 变成黑底白字小标签，下面一条粗黑线 */
+.mp3-player .mp3-status { border-bottom: 1.5px solid #2b2228; }
+.mp3-mode { flex: 0 0 auto; padding: 0 5px; background: #2b2228; color: #fff; font-style: italic; letter-spacing: 1px; }
 .song-title { color: #e0558f; font-style: italic; }
+.song-details { color: #2b2228; }
+/* 进度条：黑框，走过的是粉色 */
+.mp3-player .progress-bar-bg { border: 1.5px solid #2b2228; border-radius: 0; background: #fff; }
+.mp3-player .progress-bar-fill { border-radius: 0; background: #e0558f; }
+.mp3-player .player-mini-cover { border: 1.5px solid #2b2228; border-radius: 0; box-shadow: 2px 2px 0 #f19cbc; }
 .mp3-brand { color: #2b2228; font-style: italic; letter-spacing: 2px; }
+/* 右边的按钮盘：斜纹底、粗黑框；播放键是黑底白字的圆，其他按钮黑色 */
 .mp3-player .controls {
   border: 2px solid #2b2228;
   background: repeating-linear-gradient(135deg, #fff 0 6px, #fde4ee 6px 12px);
   box-shadow: 3px 3px 0 #2b2228;
 }
+.mp3-player .controls .btn { color: #2b2228; }
+.mp3-player .controls .btn svg { color: #2b2228; fill: currentColor; }
+.mp3-player .controls .btn-play {
+  border: 2px solid #2b2228;
+  background: #2b2228;
+  box-shadow: 2px 2px 0 #f19cbc;
+  color: #fff;
+}
+.mp3-player .controls .btn-play svg { color: #fff; fill: #fff; }
+.mp3-player .controls .btn-star.starred svg,
+.mp3-player .controls .btn-heart.liked svg { color: #e0558f; fill: #e0558f; }
 
 /* 图标：白卡 + 粗黑框 + 投影（记账、世界书粉色，备忘录、记忆蓝色），名字是黑底白字小标签 */
 .app-card {
@@ -163,8 +187,41 @@ export const HOME_EXAMPLES: { name: string; css: string }[] = [
   letter-spacing: .5px;
 }
 
-/* 电子宠物：外面加一道粉色投影 */
-.tama-widget { filter: drop-shadow(4px 4px 0 #f19cbc); }
+/* 电子宠物：白色蛋壳、粗黑框、粉色投影，上面一张 OSHI PET 标签；屏幕黑框网点底，按钮是白圆黑框 */
+.tama-widget {
+  border: 2px solid #2b2228;
+  background: radial-gradient(#f6c4d8 1px, transparent 1.3px) 0 0 / 9px 9px, #fff;
+  box-shadow: 4px 4px 0 #f19cbc;
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+.tama-widget::after { display: none; }
+.tama-widget::before {
+  content: 'OSHI PET';
+  position: absolute;
+  left: 50%; top: 20px;
+  padding: 1px 7px;
+  background: #e0558f;
+  color: #fff;
+  font: italic 700 8px/1.4 Georgia, 'Times New Roman', serif;
+  letter-spacing: 1.5px;
+  white-space: nowrap;
+  transform: translateX(-50%) rotate(-3deg);
+}
+.tama-screen {
+  border: 2px solid #2b2228;
+  border-radius: 2px;
+  background: radial-gradient(#f6c4d8 1px, transparent 1.3px) 0 0 / 6px 6px, #fff6fa;
+  box-shadow: none;
+}
+.tama-screen::before { inset: -5px; border: 0; border-radius: 3px; background: #fde4ee; box-shadow: none; }
+.tama-btn {
+  border: 2px solid #2b2228;
+  background: #fff;
+  box-shadow: 2px 2px 0 #f19cbc;
+}
+.tama-btn .tb-x { fill: #2b2228; }
+.tama-btn .tb-w { fill: #fff; }
 
 /* 消息小窗：黑色标题栏 */
 .home-notice { border: 2px solid #2b2228; box-shadow: 4px 4px 0 #f19cbc; }
