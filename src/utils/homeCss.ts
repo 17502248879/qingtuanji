@@ -89,11 +89,24 @@ export const HOME_EXAMPLES: { name: string; css: string }[] = [
   background: rgba(124, 156, 242, .55);
   transform: rotate(-4deg);
 }
-/* 头像上面的话：黑底白字的标签 */
-.bubble-text-layer {
+/* 头像上的话：整个对话框换成黑底白字的标签（原本的像素框和像素尖角拿掉），下面一个黑色小尖角 */
+.speech-bubble-container {
   background: #2b2228;
   border-radius: 0;
   box-shadow: 3px 3px 0 #f19cbc;
+  filter: none;
+}
+.bubble-text-layer { background: none; box-shadow: none; }
+.speech-bubble-container::before { display: none; }
+.speech-bubble-container::after {
+  top: 100%;
+  width: 0; height: 0;
+  margin-left: -5px;
+  border: 5px solid transparent;
+  border-top-color: #2b2228;
+  background: none;
+  -webkit-mask: none;
+  mask: none;
 }
 .bubble-text { color: #fff; font-style: italic; }
 .heart-icon { color: #e0558f; }
@@ -283,12 +296,26 @@ export const HOME_EXAMPLES: { name: string; css: string }[] = [
   background: linear-gradient(rgba(255, 255, 255, .7), rgba(255, 255, 255, 0));
   pointer-events: none;
 }
-/* 头像上的话：白色亮面胶囊 */
-.bubble-text-layer {
+/* 头像上的话：整个对话框换成白色亮面胶囊（原本的像素框和像素尖角拿掉），下面一个小小的圆尖角 */
+.speech-bubble-container {
   border: 1px solid #b9d6da;
   border-radius: 999px;
   background: linear-gradient(180deg, #ffffff 0%, #f3f8f8 48%, #e1ecec 52%, #f4f9f9 100%);
   box-shadow: 0 3px 8px rgba(20, 90, 110, .22), inset 0 1px 0 #fff;
+  filter: none;
+}
+.bubble-text-layer { background: none; box-shadow: none; }
+.speech-bubble-container::before { display: none; }
+.speech-bubble-container::after {
+  top: 100%;
+  width: 0; height: 0;
+  margin-left: -5px;
+  border: 5px solid transparent;
+  border-top-color: #e6efef;
+  background: none;
+  -webkit-mask: none;
+  mask: none;
+  filter: drop-shadow(0 1px 0 #b9d6da);
 }
 .bubble-text { color: #1b4f6a; }
 .heart-icon { color: #3fb8c6; }
@@ -317,19 +344,25 @@ export const HOME_EXAMPLES: { name: string; css: string }[] = [
 .mp3-player .progress-bar-bg { border-radius: 99px; background: rgba(0, 30, 70, .35); box-shadow: inset 0 1px 2px rgba(0, 20, 50, .4); }
 .mp3-player .progress-bar-fill { border-radius: 99px; background: var(--gel-hi), linear-gradient(180deg, #c8f59a, #4fbf3f); }
 .mp3-brand { color: #3f9fb0; letter-spacing: 2px; }
-/* 按钮盘：白色塑料圆盘，外圈半透明湖水蓝；按钮是糖果色果冻：收藏黄、上下首蓝、喜欢橘、播放绿 */
+/* 按钮盘：白色塑料圆盘，外圈半透明湖水蓝；只有中间的播放键是绿色果冻，其他四个是彩色小图示（收藏黄、上下首蓝、喜欢橘） */
 .mp3-player .controls {
   border: 3px solid rgba(63, 184, 198, .6);
   background: radial-gradient(ellipse 70% 40% at 50% 20%, #fff, rgba(255, 255, 255, 0) 70%), linear-gradient(180deg, #fbfdfd, #dfeaeb);
   box-shadow: 0 6px 14px rgba(20, 90, 110, .3), inset 0 -3px 6px rgba(20, 90, 110, .15);
 }
-.mp3-player .controls .btn { border: 1px solid rgba(0, 0, 0, .18); border-radius: 50%; box-shadow: 0 2px 4px rgba(0, 0, 0, .22), inset 0 -2px 3px rgba(0, 0, 0, .12); color: #fff; }
-.mp3-player .controls .btn svg { color: #fff; fill: #fff; filter: drop-shadow(0 1px 1px rgba(0, 0, 0, .35)); }
-.mp3-player .controls .btn-star { background: var(--gel-hi), radial-gradient(circle at 50% 85%, #ffe680, #f0b000); }
+.mp3-player .controls .btn { border: 0; background: none; box-shadow: none; }
+.mp3-player .controls .btn svg { fill: currentColor; filter: drop-shadow(0 1px 0 #fff); }
+.mp3-player .controls .btn-star { color: #f0a800; }
 .mp3-player .controls .btn-prev,
-.mp3-player .controls .btn-next { background: var(--gel-hi), radial-gradient(circle at 50% 85%, #8ad6ff, #1f7fd6); }
-.mp3-player .controls .btn-heart { background: var(--gel-hi), radial-gradient(circle at 50% 85%, #ffc27a, #ff7a1a); }
-.mp3-player .controls .btn-play { border-color: rgba(30, 110, 30, .45); background: var(--gel-hi), radial-gradient(circle at 50% 85%, #b4ee7e, #36a535); box-shadow: 0 3px 8px rgba(40, 120, 40, .4), 0 0 0 3px rgba(255, 214, 90, .55); }
+.mp3-player .controls .btn-next { color: #1f7fd6; }
+.mp3-player .controls .btn-heart { color: #ff7a1a; }
+.mp3-player .controls .btn-play {
+  border: 1px solid rgba(30, 110, 30, .45);
+  background: var(--gel-hi), radial-gradient(circle at 50% 85%, #b4ee7e, #36a535);
+  box-shadow: 0 3px 8px rgba(40, 120, 40, .4), 0 0 0 3px rgba(255, 214, 90, .55);
+  color: #fff;
+}
+.mp3-player .controls .btn-play svg { color: #fff; fill: #fff; filter: drop-shadow(0 1px 1px rgba(0, 0, 0, .35)); }
 
 /* 图标：糖果色的果冻方块（记账绿、备忘录黄、世界书蓝、记忆橘、预设湖水蓝），图案白色；名字白字描深一点的边 */
 .app-card {
