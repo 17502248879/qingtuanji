@@ -243,14 +243,16 @@ export const HOME_EXAMPLES: { name: string; css: string }[] = [
 .dock-item { border-radius: 6px; }
 .dock-item.active { border: 1.5px solid #2b2228; background: #fde4ee; box-shadow: 2px 2px 0 #2b2228; }
 .dock-item span { color: #2b2228; font-style: italic; }` },
-  { name: '水光玻璃', css: `/* 水光玻璃：天空蓝 + 一点草绿，透明玻璃卡片、上半截一道亮面、圆润的水珠按钮，背景飘着泡泡 */
+  { name: '水光玻璃', css: `/* 水光玻璃：复古未来感——白色亮面塑料机身 + 半透明湖水蓝塑料，糖果色果冻按钮，深蓝亮面屏幕，背景是天空、草地和泡泡 */
 #main-content {
-  --theme-accent: #7cc8f2;
-  --home-ink: #1d4e6e;
-  --color-text: #1d4e6e;
-  --color-muted: #5fa3c7;
-  --color-surface: #f5fbff;
-  --color-surface-rgb: 245, 251, 255;
+  --theme-accent: #5ccbd6;
+  --home-ink: #1b4f6a;
+  --color-text: #1b4f6a;
+  --color-muted: #4fa8bd;
+  --color-surface: #f7fbfb;
+  --color-surface-rgb: 247, 251, 251;
+  /* 果冻按钮的颜色：绿、黄、蓝、橘、湖水蓝 */
+  --gel-hi: radial-gradient(ellipse 70% 45% at 50% 24%, rgba(255, 255, 255, .95), rgba(255, 255, 255, 0) 72%);
   background:
     radial-gradient(circle at 18% 22%, rgba(255, 255, 255, .9) 0 3px, rgba(255, 255, 255, .25) 4px 14px, transparent 15px),
     radial-gradient(circle at 84% 14%, rgba(255, 255, 255, .9) 0 2px, rgba(255, 255, 255, .2) 3px 9px, transparent 10px),
@@ -258,18 +260,17 @@ export const HOME_EXAMPLES: { name: string; css: string }[] = [
     radial-gradient(circle at 10% 68%, rgba(255, 255, 255, .85) 0 3px, rgba(255, 255, 255, .2) 4px 16px, transparent 17px),
     radial-gradient(circle at 92% 78%, rgba(255, 255, 255, .8) 0 2px, rgba(255, 255, 255, .2) 3px 11px, transparent 12px),
     radial-gradient(ellipse 120% 45% at 20% 108%, rgba(138, 214, 118, .75), transparent 60%),
-    radial-gradient(ellipse 90% 35% at 90% 104%, rgba(96, 196, 160, .6), transparent 62%),
+    radial-gradient(ellipse 90% 35% at 90% 104%, rgba(80, 200, 190, .6), transparent 62%),
     radial-gradient(ellipse 80% 40% at 50% -5%, #ffffff, transparent 70%),
-    linear-gradient(180deg, #a9dcfb 0%, #d4efff 45%, #eefaff 100%);
+    linear-gradient(180deg, #9fdcf6 0%, #cfeff9 45%, #eefaf8 100%);
 }
 
-/* 头像：圆形水泡框，外面一圈淡蓝光 */
-.earphone-wires { opacity: .9; }
+/* 头像：白色塑料圆框，外面一圈半透明湖水蓝 */
 .avatar-inner-circle {
-  border: 3px solid rgba(255, 255, 255, .95);
+  border: 3px solid #fff;
   border-radius: 50%;
   background: #fff;
-  box-shadow: 0 0 0 4px rgba(124, 200, 242, .35), 0 6px 14px rgba(29, 110, 170, .3);
+  box-shadow: 0 0 0 5px rgba(63, 184, 198, .55), 0 0 0 6px rgba(255, 255, 255, .8), 0 7px 14px rgba(20, 90, 110, .3);
   overflow: hidden;
 }
 .avatar-inner-circle img { border-radius: 50%; }
@@ -282,115 +283,121 @@ export const HOME_EXAMPLES: { name: string; css: string }[] = [
   background: linear-gradient(rgba(255, 255, 255, .7), rgba(255, 255, 255, 0));
   pointer-events: none;
 }
-/* 头像上的话：水蓝色的亮面胶囊 */
+/* 头像上的话：白色亮面胶囊 */
 .bubble-text-layer {
-  border: 1px solid rgba(255, 255, 255, .95);
+  border: 1px solid #b9d6da;
   border-radius: 999px;
-  background: linear-gradient(180deg, #ffffff 0%, #e4f6ff 48%, #a9dcf8 52%, #d6f1ff 100%);
-  box-shadow: 0 3px 8px rgba(29, 110, 170, .25);
+  background: linear-gradient(180deg, #ffffff 0%, #f3f8f8 48%, #e1ecec 52%, #f4f9f9 100%);
+  box-shadow: 0 3px 8px rgba(20, 90, 110, .22), inset 0 1px 0 #fff;
 }
-.bubble-text { color: #1d4e6e; }
-.heart-icon { color: #4fb3e8; }
-.subtitle { color: #1d4e6e; text-shadow: 0 0 6px #fff, 0 0 2px #fff; }
+.bubble-text { color: #1b4f6a; }
+.heart-icon { color: #3fb8c6; }
+.subtitle { color: #1b4f6a; text-shadow: 0 0 6px #fff, 0 0 2px #fff; }
 
-/* 播放器：透明玻璃卡片，上半截一道亮面 */
+/* 播放器：白色亮面塑料机身，屏幕是深蓝亮面，下面一道半透明湖水蓝 */
 .mp3-player {
-  border: 1px solid rgba(255, 255, 255, .95);
-  border-radius: 16px;
-  background: linear-gradient(180deg, rgba(255, 255, 255, .85) 0%, rgba(255, 255, 255, .45) 48%, rgba(190, 230, 255, .4) 52%, rgba(255, 255, 255, .6) 100%);
-  box-shadow: 0 8px 20px rgba(29, 110, 170, .28), inset 0 1px 0 #fff;
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid #c4d7d9;
+  border-radius: 18px;
+  background: linear-gradient(180deg, #ffffff 0%, #f1f6f6 55%, #e2ecec 100%);
+  box-shadow: 0 9px 20px rgba(20, 90, 110, .26), inset 0 2px 0 #fff, inset 0 -6px 0 rgba(63, 184, 198, .35), inset 0 -7px 0 rgba(255, 255, 255, .6);
 }
 .mp3-screen {
-  border: 1px solid #5fa3c7;
+  border: 2px solid #1a4f7a;
   border-radius: 8px;
-  background: linear-gradient(180deg, rgba(255, 255, 255, .55) 0%, rgba(255, 255, 255, 0) 50%), linear-gradient(180deg, #d8f3ff, #9fd8f5);
-  box-shadow: inset 0 2px 4px rgba(29, 110, 170, .25);
-  color: #1d4e6e;
+  background: linear-gradient(180deg, rgba(255, 255, 255, .38) 0%, rgba(255, 255, 255, .06) 46%, rgba(255, 255, 255, 0) 47%), linear-gradient(180deg, #62c4ee, #1d6db2);
+  box-shadow: inset 0 0 10px rgba(0, 30, 70, .35);
+  color: #fff;
 }
-.mp3-player .mp3-screen::before { border: 1px solid rgba(255, 255, 255, .9); border-radius: 12px; background: linear-gradient(180deg, #ffffff, #cbe9fa); box-shadow: 0 1px 3px rgba(29, 110, 170, .3); }
-.mp3-player .mp3-status { border-bottom-color: rgba(29, 78, 110, .35); }
-.song-title { color: #0f5d8c; }
-.mp3-player .progress-bar-bg { border-radius: 99px; background: rgba(255, 255, 255, .7); box-shadow: inset 0 1px 2px rgba(29, 110, 170, .3); }
-.mp3-player .progress-bar-fill { border-radius: 99px; background: linear-gradient(180deg, #b7f08f, #4fbf4a); }
-.mp3-brand { color: #3f86ad; letter-spacing: 2px; }
-/* 按钮盘：一颗亮晶晶的水珠；播放键是绿色的水珠 */
+.mp3-player .mp3-screen::before { border: 1px solid #b5ccd0; border-radius: 12px; background: linear-gradient(180deg, #e9f1f2, #c9dcdf); box-shadow: inset 0 1px 0 #fff; }
+.mp3-player .mp3-status { border-bottom-color: rgba(255, 255, 255, .45); color: #fff; }
+.mp3-mode, .mp3-player .mp3-status { color: #fff; }
+.song-title { color: #fff; text-shadow: 0 1px 2px rgba(0, 40, 90, .5); }
+.song-details, .mp3-player .progress-container span { color: rgba(255, 255, 255, .85); }
+.mp3-player .player-mini-cover { border: 1px solid rgba(255, 255, 255, .8); border-radius: 6px; }
+.mp3-player .progress-bar-bg { border-radius: 99px; background: rgba(0, 30, 70, .35); box-shadow: inset 0 1px 2px rgba(0, 20, 50, .4); }
+.mp3-player .progress-bar-fill { border-radius: 99px; background: var(--gel-hi), linear-gradient(180deg, #c8f59a, #4fbf3f); }
+.mp3-brand { color: #3f9fb0; letter-spacing: 2px; }
+/* 按钮盘：白色塑料圆盘，外圈半透明湖水蓝；按钮是糖果色果冻：收藏黄、上下首蓝、喜欢橘、播放绿 */
 .mp3-player .controls {
-  border: 1px solid rgba(255, 255, 255, .95);
-  background: radial-gradient(ellipse 70% 45% at 50% 22%, rgba(255, 255, 255, .95), rgba(255, 255, 255, 0) 70%), radial-gradient(circle at 50% 80%, #bfe8ff, #7cc8f2);
-  box-shadow: 0 6px 14px rgba(29, 110, 170, .35), inset 0 -4px 8px rgba(29, 110, 170, .25);
+  border: 3px solid rgba(63, 184, 198, .6);
+  background: radial-gradient(ellipse 70% 40% at 50% 20%, #fff, rgba(255, 255, 255, 0) 70%), linear-gradient(180deg, #fbfdfd, #dfeaeb);
+  box-shadow: 0 6px 14px rgba(20, 90, 110, .3), inset 0 -3px 6px rgba(20, 90, 110, .15);
 }
-.mp3-player .controls .btn { color: #1d4e6e; }
-.mp3-player .controls .btn svg { color: #1d4e6e; fill: currentColor; }
-.mp3-player .controls .btn-play {
-  border: 1px solid rgba(255, 255, 255, .95);
-  background: radial-gradient(ellipse 70% 45% at 50% 25%, rgba(255, 255, 255, .9), rgba(255, 255, 255, 0) 70%), radial-gradient(circle at 50% 80%, #a6ec7c, #3fae3c);
-  box-shadow: 0 3px 8px rgba(40, 120, 40, .35);
-}
-.mp3-player .controls .btn-play svg { color: #fff; fill: #fff; filter: drop-shadow(0 1px 1px rgba(20, 80, 20, .5)); }
+.mp3-player .controls .btn { border: 1px solid rgba(0, 0, 0, .18); border-radius: 50%; box-shadow: 0 2px 4px rgba(0, 0, 0, .22), inset 0 -2px 3px rgba(0, 0, 0, .12); color: #fff; }
+.mp3-player .controls .btn svg { color: #fff; fill: #fff; filter: drop-shadow(0 1px 1px rgba(0, 0, 0, .35)); }
+.mp3-player .controls .btn-star { background: var(--gel-hi), radial-gradient(circle at 50% 85%, #ffe680, #f0b000); }
+.mp3-player .controls .btn-prev,
+.mp3-player .controls .btn-next { background: var(--gel-hi), radial-gradient(circle at 50% 85%, #8ad6ff, #1f7fd6); }
+.mp3-player .controls .btn-heart { background: var(--gel-hi), radial-gradient(circle at 50% 85%, #ffc27a, #ff7a1a); }
+.mp3-player .controls .btn-play { border-color: rgba(30, 110, 30, .45); background: var(--gel-hi), radial-gradient(circle at 50% 85%, #b4ee7e, #36a535); box-shadow: 0 3px 8px rgba(40, 120, 40, .4), 0 0 0 3px rgba(255, 214, 90, .55); }
 
-/* 图标：圆角水蓝玻璃块，上半截亮面；名字白色描一圈蓝 */
+/* 图标：糖果色的果冻方块（记账绿、备忘录黄、世界书蓝、记忆橘、预设湖水蓝），图案白色；名字白字描深一点的边 */
 .app-card {
-  border: 1px solid rgba(255, 255, 255, .95);
-  border-radius: 14px;
-  background: linear-gradient(180deg, rgba(255, 255, 255, .9) 0%, rgba(255, 255, 255, .5) 48%, rgba(124, 200, 242, .45) 52%, rgba(205, 238, 255, .8) 100%);
-  box-shadow: 0 4px 10px rgba(29, 110, 170, .28), inset 0 1px 0 #fff;
+  border: 1px solid rgba(0, 0, 0, .15);
+  border-radius: 16px;
+  background: var(--gel-hi), radial-gradient(circle at 50% 90%, #8fe3e8, #21a9b8);
+  box-shadow: 0 4px 9px rgba(20, 90, 110, .3), inset 0 -3px 5px rgba(0, 0, 0, .12);
 }
-.app-item[data-app-icon-key="memos"] .app-card,
-.app-item[data-app-icon-key="memories"] .app-card { background: linear-gradient(180deg, rgba(255, 255, 255, .9) 0%, rgba(255, 255, 255, .5) 48%, rgba(132, 214, 112, .45) 52%, rgba(214, 245, 205, .85) 100%); }
+.app-item[data-app-icon-key="ledger"] .app-card { background: var(--gel-hi), radial-gradient(circle at 50% 90%, #b4ee7e, #3aa53a); }
+.app-item[data-app-icon-key="memos"] .app-card { background: var(--gel-hi), radial-gradient(circle at 50% 90%, #ffe680, #efae00); }
+.app-item[data-app-icon-key="world"] .app-card { background: var(--gel-hi), radial-gradient(circle at 50% 90%, #8ad6ff, #1f7fd6); }
+.app-item[data-app-icon-key="memories"] .app-card { background: var(--gel-hi), radial-gradient(circle at 50% 90%, #ffc27a, #ff7a1a); }
 .icon-box { background: none; box-shadow: none; }
-.app-label-cn { color: #fff; text-shadow: 0 0 3px #1d6e9e, 0 1px 2px #1d4e6e; }
+.app-item svg.px-icon { filter: drop-shadow(0 1px 1px rgba(0, 0, 0, .3)); }
+.app-item svg.px-icon .px-x { fill: #fff; }
+.app-item svg.px-icon .px-o { fill: rgba(255, 255, 255, .6); }
+.app-item svg.px-icon .px-w { fill: rgba(255, 255, 255, .22); }
+.app-label-cn { color: #fff; text-shadow: 0 0 3px #1b5f7e, 0 1px 2px #1b4f6a; }
 
-/* 电子宠物：透明的水蓝玻璃蛋，屏幕跟播放器同一种亮面液晶，按钮是小水珠 */
+/* 电子宠物：半透明湖水蓝塑料蛋（像老电脑那种），屏幕亮面浅蓝，按钮是黄、绿、蓝果冻 */
 .tama-widget {
-  border: 1px solid rgba(255, 255, 255, .95);
-  background: radial-gradient(ellipse 55% 32% at 34% 16%, rgba(255, 255, 255, .9), rgba(255, 255, 255, 0) 70%), linear-gradient(165deg, rgba(190, 232, 255, .55), rgba(124, 200, 242, .75));
-  box-shadow: 0 8px 18px rgba(29, 110, 170, .3), inset 0 -8px 14px rgba(29, 110, 170, .2), inset 0 2px 0 #fff;
+  border: 1px solid rgba(255, 255, 255, .85);
+  background: radial-gradient(ellipse 55% 30% at 34% 15%, rgba(255, 255, 255, .85), rgba(255, 255, 255, 0) 70%), linear-gradient(165deg, rgba(140, 222, 230, .7), rgba(28, 160, 178, .82));
+  box-shadow: 0 9px 18px rgba(20, 90, 110, .32), inset 0 -10px 16px rgba(10, 90, 110, .3), inset 0 2px 0 rgba(255, 255, 255, .9);
 }
 .tama-screen {
-  border: 1px solid #5fa3c7;
+  border: 2px solid #1a4f7a;
   border-radius: 6px;
-  background: linear-gradient(180deg, rgba(255, 255, 255, .55) 0%, rgba(255, 255, 255, 0) 50%), linear-gradient(180deg, #e2f7ff, #a9dcf8);
+  background: linear-gradient(180deg, rgba(255, 255, 255, .55) 0%, rgba(255, 255, 255, 0) 50%), linear-gradient(180deg, #e6f8ff, #a8dcf3);
 }
-.tama-screen::before { border: 1px solid rgba(255, 255, 255, .9); border-radius: 10px; background: linear-gradient(180deg, #ffffff, #cbe9fa); }
-.tama-btn {
-  border: 1px solid rgba(255, 255, 255, .95);
-  background: radial-gradient(ellipse 70% 45% at 50% 25%, rgba(255, 255, 255, .95), rgba(255, 255, 255, 0) 70%), radial-gradient(circle at 50% 80%, #c9eeff, #7cc8f2);
-  box-shadow: 0 3px 6px rgba(29, 110, 170, .3);
-}
-.tama-btn .tb-x { fill: #1d4e6e; }
+.tama-screen::before { border: 1px solid rgba(255, 255, 255, .9); border-radius: 10px; background: linear-gradient(180deg, #ffffff, #dce9eb); }
+.tama-btn { border: 1px solid rgba(0, 0, 0, .18); box-shadow: 0 2px 4px rgba(0, 0, 0, .25), inset 0 -2px 3px rgba(0, 0, 0, .12); background: var(--gel-hi), radial-gradient(circle at 50% 85%, #ffe680, #f0b000); }
+.tama-btn:nth-child(2) { background: var(--gel-hi), radial-gradient(circle at 50% 85%, #b4ee7e, #36a535); }
+.tama-btn:nth-child(3) { background: var(--gel-hi), radial-gradient(circle at 50% 85%, #8ad6ff, #1f7fd6); }
+.tama-btn .tb-x { fill: #fff; }
+.tama-btn .tb-w { fill: rgba(0, 0, 0, .25); }
 
-/* 消息小窗：玻璃小窗，标题栏是水蓝亮面 */
+/* 消息小窗：白色小窗，标题栏是深蓝亮面 */
 .home-notice {
-  border: 1px solid rgba(255, 255, 255, .95);
+  border: 1px solid #9fc3cf;
   border-radius: 10px;
   overflow: hidden;
-  background: rgba(255, 255, 255, .7);
-  box-shadow: 0 6px 16px rgba(29, 110, 170, .25);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  background: linear-gradient(180deg, #ffffff, #eef5f6);
+  box-shadow: 0 6px 16px rgba(20, 90, 110, .25);
 }
-.home-notice-bar { border-bottom: 1px solid rgba(255, 255, 255, .9); background: linear-gradient(180deg, #ffffff 0%, #d9f2ff 48%, #9fd7f5 52%, #c6ebff 100%); color: #1d4e6e; }
+.home-notice-bar { border-bottom: 1px solid #1a4f7a; background: linear-gradient(180deg, rgba(255, 255, 255, .4) 0%, rgba(255, 255, 255, .06) 48%, rgba(255, 255, 255, 0) 50%), linear-gradient(180deg, #5cbfea, #1f6db0); color: #fff; }
+.home-notice-title, .home-notice-title em { color: #fff; }
+.home-notice-btns { background: #fff; }
 
 /* 页数小点：小泡泡 */
-.home-dot { border: 1px solid rgba(255, 255, 255, .95); border-radius: 50%; background: rgba(124, 200, 242, .45); box-shadow: 0 1px 3px rgba(29, 110, 170, .3); }
-.home-dot.active { background: radial-gradient(circle at 40% 35%, #fff 0 20%, #4fb3e8 60%); }
+.home-dot { border: 1px solid rgba(255, 255, 255, .95); border-radius: 50%; background: rgba(63, 184, 198, .45); box-shadow: 0 1px 3px rgba(20, 90, 110, .3); }
+.home-dot.active { background: var(--gel-hi), radial-gradient(circle at 50% 85%, #b4ee7e, #36a535); }
 
-/* 底下那排：一整条玻璃，现在这页那颗是亮晶晶的水珠底 */
+/* 底下那排：白色亮面塑料，下面一道湖水蓝；现在这页那颗是绿色果冻 */
 .dock-bar {
-  border: 1px solid rgba(255, 255, 255, .95);
+  border: 1px solid #c4d7d9;
   border-radius: 22px;
-  background: linear-gradient(180deg, rgba(255, 255, 255, .85) 0%, rgba(255, 255, 255, .5) 48%, rgba(170, 222, 250, .45) 52%, rgba(255, 255, 255, .65) 100%);
-  box-shadow: 0 8px 20px rgba(29, 110, 170, .3), inset 0 1px 0 #fff;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  background: linear-gradient(180deg, #ffffff 0%, #f1f6f6 55%, #e2ecec 100%);
+  box-shadow: 0 9px 20px rgba(20, 90, 110, .28), inset 0 2px 0 #fff, inset 0 -5px 0 rgba(63, 184, 198, .35);
 }
 .dock-item { border-radius: 16px; }
 .dock-item.active {
-  border: 1px solid rgba(255, 255, 255, .95);
-  background: radial-gradient(ellipse 80% 45% at 50% 20%, rgba(255, 255, 255, .95), rgba(255, 255, 255, 0) 70%), linear-gradient(180deg, #c3ecff, #7cc8f2);
-  box-shadow: 0 3px 8px rgba(29, 110, 170, .3);
+  border: 1px solid rgba(30, 110, 30, .35);
+  background: var(--gel-hi), radial-gradient(circle at 50% 90%, #c8f59a, #4fbf3f);
+  box-shadow: 0 3px 8px rgba(40, 120, 40, .3);
 }
-.dock-item span { color: #1d4e6e; }` }
+.dock-item.active span { color: #fff; text-shadow: 0 1px 1px rgba(20, 80, 20, .5); }
+.dock-item.active svg.px-icon .px-x { fill: #fff; }
+.dock-item.active svg.px-icon .px-w { fill: rgba(255, 255, 255, .25); }
+.dock-item span { color: #1b4f6a; }` }
 ];
