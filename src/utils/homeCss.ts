@@ -60,7 +60,7 @@ export const HOME_EXAMPLES: { name: string; css: string }[] = [
 
 /* 最上面：杂志的刊头小字 */
 .ios-status-bar::after {
-  content: 'PRIVATE OSHI COLLECTION · VOL.01';
+  content: '推しのいる毎日 · VOL.01';
   position: absolute;
   left: 0; right: 0; top: 33px;
   color: #e0558f;
@@ -116,7 +116,7 @@ export const HOME_EXAMPLES: { name: string; css: string }[] = [
   letter-spacing: .5px;
 }
 
-/* 播放器：白纸卡片 + 粗黑框 + 粉色投影，左上角一张 ISSUE 标签 */
+/* 播放器：白纸卡片 + 粗黑框 + 粉色投影，左上角一张 DAY 01 标签 */
 .mp3-player {
   border: 2px solid #2b2228;
   border-radius: 4px;
@@ -125,7 +125,7 @@ export const HOME_EXAMPLES: { name: string; css: string }[] = [
   overflow: visible;
 }
 .mp3-player::before {
-  content: 'ISSUE 01';
+  content: 'DAY 01';
   position: absolute;
   inset: auto;
   left: 14px; top: -9px; z-index: 2;
